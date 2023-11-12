@@ -1,0 +1,10 @@
+
+def square(field a) -> field:
+  return a * a
+
+
+
+def main(private u64[size] arr, public u64[2] point) {
+    
+}
+
