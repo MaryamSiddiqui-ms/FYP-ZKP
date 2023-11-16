@@ -1,10 +1,33 @@
+from "./size.zok" import size;
 
-def square(field a) -> field:
-  return a * a
+def square(u64 num) -> u64 {
+  return num * num;
+}
 
+def difference(u64 num1, u64 num2) -> u64 {
+  return if num1 >= num2 {
+    num1 - num2
+  }
+  else{
+    num2 - num1
+  };
+}
 
+def main(private u64[size][3] points, public u64[2] point) -> u64[size][2] {
+  
+  u64[size][2] mut arr = [[0,0]; size];
 
-def main(private u64[size] arr, public u64[2] point) {
+  for u32 i in 0..size {
+
+    u64 mut dx1 = difference(points[i][0], point[0]);
+    u64 mut dx2 = difference(points[i][1], point[1]);
+
+    u64 mut distance = square(dx1) + square(dx2);
+    arr[i] = [distance, points[i][2]];
     
+  }
+
+
+  return arr;
 }
 
