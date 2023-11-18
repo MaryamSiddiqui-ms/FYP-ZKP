@@ -1,4 +1,6 @@
-from "./size.zok" import size;
+from "./size.zok" import rows;
+from "./size.zok" import cols;
+from "./size.zok" import test;
 
 def square(u64 num) -> u64 {
   return num * num;
@@ -13,11 +15,11 @@ def difference(u64 num1, u64 num2) -> u64 {
   };
 }
 
-def main(private u64[size][3] points, public u64[2] point) -> u64[size][2] {
+def main(public u64[test] point, private u64[rows][cols] points) -> u64[rows][test] {
   
-  u64[size][2] mut arr = [[0,0]; size];
+  u64[rows][test] mut arr = [[0; test]; rows];
 
-  for u32 i in 0..size {
+  for u32 i in 0..rows {
 
     u64 mut dx1 = difference(points[i][0], point[0]);
     u64 mut dx2 = difference(points[i][1], point[1]);
