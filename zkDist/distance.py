@@ -23,7 +23,7 @@ def minMaxNormalizationAndInteger(df):
 
     return df
 
-def zkDistance(datapoint, df):
+def zkDistance(df, datapoint):
     
     datapoint.append(-1)
     df.loc[len(df)] = datapoint   
@@ -56,16 +56,14 @@ def zkDistance(datapoint, df):
         print( witness_array_line ) 
     else:
         print("Witness not found in the output.")
-    with open('witness_output.log', 'w') as output_file:
+    with open('witness_output.csv', 'w') as output_file:
         output_file.write( witness_array_line)
 
     subprocess.run(["zokrates", "generate-proof"])
 
     with open("proof.json", 'r') as proof_file:
         proof = json.load(proof_file)
-    
-
-df = pd.read_csv('train.csv', header=None)
 
 
-zkDistance([6, 3], df)
+    witness_file_path = './witness_output.csv'
+    return proof, witness_file_path    
