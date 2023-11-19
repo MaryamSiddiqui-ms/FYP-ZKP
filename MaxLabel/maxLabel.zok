@@ -1,0 +1,79 @@
+from "./size.zok" import size;
+
+const u64 MAX_POS_VAL = 9223372036854775807;
+
+def gt(u64 a, u64 b) -> bool {
+    return (b - a) > MAX_POS_VAL;
+}
+
+struct MaxLabel{
+    u64 label;
+    u64 count;
+}
+
+def changefunc(u64 nlabel)->MaxLabel{
+    MaxLabel newLabel = MaxLabel{ label:nlabel, count:1};
+    return newLabel;
+}
+def newitr(u32 mut itr)->u32{
+    itr= itr+1;
+    return itr;
+}
+
+def main(private u64[size]input) -> u64 {
+
+  MaxLabel[size] mut maxLabel = [MaxLabel{
+    label:-1,count:0
+  };size];
+
+  
+  u32 mut itr =0;
+  for u32 i in 0..size{
+    bool mut flag = false;
+    u64 x = input[i];
+    for u32 j in 0..size {
+        flag = if input[i] == maxLabel[j].label  {  
+            true
+        }
+        else{
+            flag
+        };
+
+        maxLabel[j].count = if input[i] == maxLabel[j].label {
+            maxLabel[j].count +1     
+        }
+        else{
+           maxLabel[j].count
+        };
+    }
+    maxLabel[itr] = if !flag {
+        changefunc(input[i])           
+    }
+    else
+    {
+        maxLabel[itr]
+    };
+
+    itr = if !flag {
+          newitr(itr)          
+    }
+    else
+    {
+        itr
+    };
+}
+   u64 mut maxCount = maxLabel[0].count;
+   u64 mut maxLab = maxLabel[0].label;
+   u64 mut res = 0;
+   for u32 i in 1..size{
+    u64 val = maxLabel[i].count;
+        maxLab = if gt(val, maxCount) { maxLabel[i].label } else { maxLab };
+        maxCount = if gt(val, maxCount) { val } else { maxCount };
+
+   }
+    return maxLab;
+}
+
+
+
+
