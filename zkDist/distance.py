@@ -58,13 +58,12 @@ def zkDistance(datapoint, df):
         print("Witness not found in the output.")
     with open('witness_output.log', 'w') as output_file:
         output_file.write( witness_array_line)
-        
+
     subprocess.run(["zokrates", "generate-proof"])
 
     with open("proof.json", 'r') as proof_file:
         proof = json.load(proof_file)
     
-    print(proof)
 
 df = pd.read_csv('train.csv', header=None)
 
