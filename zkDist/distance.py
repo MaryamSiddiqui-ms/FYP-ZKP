@@ -47,7 +47,18 @@ def zkDistance(datapoint, df):
 
     subprocess.run(["zokrates", "compile", "-i", "distance.zok"])
     subprocess.run(["zokrates", "setup"])
-    subprocess.run(["zokrates", "compute-witness", "--verbose", "-a"] + arguments)
+    result = subprocess.run(["zokrates", "compute-witness", "--verbose", "-a"] + arguments, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    output_lines = result.stdout.split('\n')
+    witness_line = next((line for line in output_lines if "Witness:" in line), None)
+    if witness_line:
+        witness_index = output_lines.index(witness_line)
+        witness_array_line = output_lines[witness_index + 1]
+        print( witness_array_line ) 
+    else:
+        print("Witness not found in the output.")
+    with open('witness_output.log', 'w') as output_file:
+        output_file.write( witness_array_line)
+        
     subprocess.run(["zokrates", "generate-proof"])
 
     with open("proof.json", 'r') as proof_file:
