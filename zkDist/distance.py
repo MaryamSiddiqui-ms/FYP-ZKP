@@ -1,6 +1,7 @@
 import subprocess 
 import json
 import pandas as pd
+import os
 
 def getArgsFromJson():
     with open('input.json', 'r') as f:
@@ -23,8 +24,25 @@ def minMaxNormalizationAndInteger(df):
 
     return df
 
-def zkDistance(df, datapoint):
+
+def getWitness():
+    with open('witness_output.txt', 'r') as file:
+        content = file.read()
+
+    try:
+        python_array = json.loads(content)
+        if isinstance(python_array, list):
+            return python_array
+        else:
+            print("The content is not in array format.")
+    except json.JSONDecodeError as e:
+        print("Error decoding JSON:", e)
+
+def zkDistance(df, datapoint, dir_path):
     
+    curr_path = dir_path + '/zkDist'
+    os.chdir(curr_path)
+
     datapoint.append(-1)
     df.loc[len(df)] = datapoint   
  
@@ -48,7 +66,9 @@ def zkDistance(df, datapoint):
     subprocess.run(["zokrates", "compile", "-i", "distance.zok"])
     subprocess.run(["zokrates", "setup"])
     result = subprocess.run(["zokrates", "compute-witness", "--verbose", "-a"] + arguments, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    
     output_lines = result.stdout.split('\n')
+    
     witness_line = next((line for line in output_lines if "Witness:" in line), None)
     if witness_line:
         witness_index = output_lines.index(witness_line)
@@ -56,7 +76,9 @@ def zkDistance(df, datapoint):
         print( witness_array_line ) 
     else:
         print("Witness not found in the output.")
-    with open('witness_output.csv', 'w') as output_file:
+
+
+    with open('witness_output.txt', 'w') as output_file:
         output_file.write( witness_array_line)
 
     subprocess.run(["zokrates", "generate-proof"])
@@ -65,5 +87,8 @@ def zkDistance(df, datapoint):
         proof = json.load(proof_file)
 
 
-    witness_file_path = './witness_output.csv'
-    return proof, witness_file_path    
+    witness = getWitness()
+
+    os.chdir(curr_path)
+    
+    return proof, witness    
