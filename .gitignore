@@ -7,4 +7,5 @@ proof.json
 proving.key
 verification.key
 witness
-witness_output.log
+witness_output*
+size.zok
