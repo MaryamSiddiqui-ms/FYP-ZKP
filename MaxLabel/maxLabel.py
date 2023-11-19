@@ -6,10 +6,7 @@ def zkmaxLabel(size):
 # Extract the labels from the KNN output
         with open('maxLabel.json', 'r') as f:
             knn_output = json.load(f)
-        # label = [item[-1] for item in knn_output]
         label = knn_output[1::2]
-        # Convert the labels to strings and join them with commas
-        # labels_str = ','.join(map(str, labels))
         labels = list(map(str, label))
         print(labels)
 
