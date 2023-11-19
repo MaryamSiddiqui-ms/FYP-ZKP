@@ -1,41 +1,41 @@
 from "./size.zok" import size;
 
 def gt(u64 a, u64 b) -> bool{
-    return b < a;
+    return a > b;
 }
 
 //working sorting algorithm
-def sorting<N>(u64[N] mut a) -> u64[N]{
+def sorting<N>(u64[N][2] mut a) -> u64[N][2]{
     
-    for u32 i in 0..N-2-1{
+    for u32 i in 0..N-1{
         u64 mut res = 0;
-        u64 mut label = 0;
-        for u32 j in 0..N-i-2-1{
+        u64 mut lab = 0;
+        for u32 j in 0..N-i-1{
 
-            res = if gt(a[j],a[j+2]){a[j+2]}else{a[j]};
-            label = if gt(a[j],a[j+2]){a[j+2+1]}else{a[j+1]};
+            res = if gt(a[j][0],a[j+1][0]) {a[j][0]} else {a[j+1][0]};
+            lab = if gt(a[j][0],a[j+1][0]) {a[j][1]} else {a[j+1][1]};
 
-            a[j+2] = if gt(a[j],a[j+2]){a[j]}else{a[j+2]};
-            a[j+2+1] = if gt(a[j],a[j+2]){a[j+1]}else{a[j+2+1]};
+            a[j][1] = if gt(a[j][0],a[j+1][0]) {a[j+1][1]} else {a[j][1]};
+            a[j][0] = if gt(a[j][0],a[j+1][0]) {a[j+1][0]} else {a[j][0]};
 
-            a[j] = if gt(a[j],res){res}else{a[j]};
-            a[j+1] = if gt(a[j],res){label}else{a[j+1]};
+            a[j+1][0] = res;
+            a[j+1][1] = lab;
         }
     }
     return a;
 }
 
-def zksort<N>(u64[N] mut inputs) -> u32 {
+def zksort<N>(u64[N][2] mut inputs) -> u32 {
     u32 mut res = 1;
-    for u32 i in 0..N-2-1 {
-        res = if gt(inputs[i], inputs[i+2]) {0} else {res};
+    for u32 i in 0..N-1 {
+        res = if gt(inputs[i][0], inputs[i+1][0]) {0} else {res};
         assert(res == 1);
     }
     return res;
 }
 
-def main(private u64[size] arr) -> u64[size] {
-    u64[size] mut a = sorting(arr);
+def main(private u64[size][2] arr) -> u64[size][2] {
+    u64[size][2] mut a = sorting(arr);
     u32 mut sorted = zksort(a);
     assert(sorted == 1);
     return a;
