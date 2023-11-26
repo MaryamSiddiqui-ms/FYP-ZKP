@@ -29,6 +29,10 @@ def main(private u64[rows][cols] points, public u64[test] point) -> u64[rows][te
     
   }
 
+  // for u32 in 0..rows {
+    
+  // }
+
 
   return arr;
 }
