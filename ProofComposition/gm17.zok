@@ -35,6 +35,7 @@ def flat<N, F>(field[N][2] input) -> field[F] {
 
 def main<N, Q>(Proof<N> proof, VerificationKey<Q> vk) -> bool {
     assert(Q == N + 1); // query length (Q) should be N + 1
+
     field[8] flat_proof = [
         ...proof.proof.a,
         ...flat::<2, 4>(proof.proof.b),

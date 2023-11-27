@@ -71,7 +71,20 @@ def main(private u64[size]input) -> u64 {
         maxCount = if gt(val, maxCount) { val } else { maxCount };
 
    }
-    return maxLab;
+
+  u64 mut checkMaxCount = maxLabel[0].count;
+   u64 mut checkMaxLabel = maxLabel[0].label;
+   u64 mut res = 0;
+   for u32 i in 1..size{
+    u64 val = maxLabel[i].count;
+        checkMaxLabel = if gt(val, checkMaxCount) { maxLabel[i].label } else { checkMaxLabel };
+        checkMaxCount = if gt(val, checkMaxCount) { val } else { checkMaxCount };
+
+   }
+
+    assert(checkMaxLabel == maxLab);
+
+    return checkMaxLabel;
 }
 
 
