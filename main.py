@@ -18,7 +18,6 @@ except Exception as e:
 
 
 def main():
-    start_time = time.time()
     dir_path = os.getcwd()
 
 
@@ -27,6 +26,8 @@ def main():
     k = 3
 
     print(df.head(10))
+
+    start_time = time.time()
 
     zkDistProof, distanceWitness = zkDistance(df, datapoint, dir_path)
 
@@ -54,6 +55,8 @@ def main():
     # if(verification_status == "FAILED"):
     #     print("Verification Failed!")
     #     return -1
+
+    # final_proof = proof_composition(zkDistProof, zkSortProof, zkmaxLabelProof)
     
     print(prediction)
     end_time = time.time()

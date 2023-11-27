@@ -1,0 +1,11 @@
+from "./gm17" import main as verify, Proof, VerificationKey;
+from "./size.zok" import size, SIGNATURE_PROOF_INPUTS_1, SIGNATURE_PROOF_INPUTS_2;
+
+const u32 SIGNATURE_VERIFICATION_KEY_SIZE_1 = SIGNATURE_PROOF_INPUTS_1 + 1;
+const u32 SIGNATURE_VERIFICATION_KEY_SIZE_2 = SIGNATURE_PROOF_INPUTS_2 + 1;
+
+def main(Proof<SIGNATURE_PROOF_INPUTS_1> signatureProof1, Proof<SIGNATURE_PROOF_INPUTS_2>[size] signatureProof2, VerificationKey<SIGNATURE_VERIFICATION_KEY_SIZE>[size] signatureKey1, VerificationKey<SIGNATURE_VERIFICATION_KEY_SIZE_2>[size] signatureKey2) {
+   for u32 i in 0..size{
+      assert(verify(signatureProof[i], signatureKey[i]));
+   }
+}
