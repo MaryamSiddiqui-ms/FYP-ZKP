@@ -25,7 +25,7 @@ def zkSort(arguments, dir_path):
     with open('size.zok', 'w') as f:
         f.write('const u32 size = {};\n'.format(int(len(arguments)/2)))
 
-    subprocess.run(["zokrates", "compile", "-i", "sortlabel.zok"])
+    subprocess.run(["zokrates", "compile", "-i", "sortver.zok"])
     subprocess.run(["zokrates", "setup"])
     result = subprocess.run(["zokrates", "compute-witness", "--verbose", "-a"] + arguments, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     output_lines = result.stdout.split('\n')

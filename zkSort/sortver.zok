@@ -1,0 +1,20 @@
+from "./size.zok" import size;
+
+def gt(u64 a, u64 b) -> bool{
+    return a > b;
+}
+
+def zksort<N>(u64[N][2] mut inputs) -> u32 {
+    u32 mut res = 1;
+    for u32 i in 0..N-1 {
+        res = if gt(inputs[i][0], inputs[i+1][0]) {0} else {res};
+        assert(res == 1);
+    }
+    return res;
+}
+
+def main(private u64[size][2] arr) -> u64[size][2] {
+    u32 mut sorted = zksort(arr);
+    assert(sorted == 1);
+    return arr;
+}
