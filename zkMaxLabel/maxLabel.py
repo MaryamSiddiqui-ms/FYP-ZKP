@@ -18,8 +18,8 @@ def zkmaxLabel(knn_output, K, dir_path):
     
     
 
-    subprocess.run(["zokrates", "compile", "-i", "maxLabel.zok"])
-    subprocess.run(["zokrates", "setup"])
+    subprocess.run(["zokrates", "compile", "-i", "maxLabel.zok", "--curve", "bls12_377"])
+    subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
     result = subprocess.run(["zokrates", "compute-witness", "--verbose", "-a"] + labels, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     
     output_lines = result.stdout.split('\n')
@@ -35,7 +35,7 @@ def zkmaxLabel(knn_output, K, dir_path):
     with open('witness_output.txt', 'w') as output_file:
         output_file.write( witness_array_line )
         
-    subprocess.run(["zokrates", "generate-proof"])
+    subprocess.run(["zokrates", "generate-proof", "--proving-scheme", "gm17"])
     with open("proof.json", 'r') as proof_file:
         proof = json.load(proof_file)
         

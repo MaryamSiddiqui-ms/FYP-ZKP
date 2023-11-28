@@ -25,8 +25,8 @@ def zkSort(arguments, dir_path):
     with open('size.zok', 'w') as f:
         f.write('const u32 size = {};\n'.format(int(len(arguments)/2)))
 
-    subprocess.run(["zokrates", "compile", "-i", "sortver.zok"])
-    subprocess.run(["zokrates", "setup"])
+    subprocess.run(["zokrates", "compile", "-i", "sortver.zok", "--curve", "bls12_377"])
+    subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
     result = subprocess.run(["zokrates", "compute-witness", "--verbose", "-a"] + arguments, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     output_lines = result.stdout.split('\n')
     witness_line = next((line for line in output_lines if "Witness:" in line), None)
@@ -39,7 +39,7 @@ def zkSort(arguments, dir_path):
     with open('witness_output.txt', 'w') as output_file:
         output_file.write(witness_array_line)
         
-    subprocess.run(["zokrates", "generate-proof"])
+    subprocess.run(["zokrates", "generate-proof", "--proving-scheme", "gm17"])
     with open("proof.json", 'r') as proof_file:
         proof = json.load(proof_file)
 

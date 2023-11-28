@@ -1,0 +1,11 @@
+from "snark/gm17" import main as verify, Proof, VerificationKey;
+from "./size.zok" import IN_1,IN_2,IN_3;
+const u32 IV_0 = IN_0 + 1;
+const u32 IV_1 = IN_1 + 1;
+const u32 IV_2 = IN_2 + 1;
+
+def main(Proof<IN_1> sp1, Proof<IN_2> sp2, Proof<IN_3> sp3, VerificationKey<IN_1> vk1, VerificationKey<IN_2> vk2, VerificationKey<IN_3> vk3){
+   assert(verify(sp1, vk1));
+   assert(verify(sp2, vk2));
+   assert(verify(sp3, vk3));
+}

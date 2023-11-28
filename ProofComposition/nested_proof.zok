@@ -1,11 +1,9 @@
-from "./gm17" import main as verify, Proof, VerificationKey;
-from "./size.zok" import size, SIGNATURE_PROOF_INPUTS_1, SIGNATURE_PROOF_INPUTS_2;
+from "snark/gm17" import main as verify, Proof, VerificationKey;
+from "./size.zok" import IN_1,IN_2;
+const u32 IV_1 = IN_1 + 1;
+const u32 IV_2 = IN_2 + 1;
 
-const u32 SIGNATURE_VERIFICATION_KEY_SIZE_1 = SIGNATURE_PROOF_INPUTS_1 + 1;
-const u32 SIGNATURE_VERIFICATION_KEY_SIZE_2 = SIGNATURE_PROOF_INPUTS_2 + 1;
-
-def main(Proof<SIGNATURE_PROOF_INPUTS_1> signatureProof1, Proof<SIGNATURE_PROOF_INPUTS_2>[size] signatureProof2, VerificationKey<SIGNATURE_VERIFICATION_KEY_SIZE>[size] signatureKey1, VerificationKey<SIGNATURE_VERIFICATION_KEY_SIZE_2>[size] signatureKey2) {
-   for u32 i in 0..size{
-      assert(verify(signatureProof[i], signatureKey[i]));
-   }
+def main(Proof<IN_1> sp1, Proof<IN_2> sp2, VerificationKey<IV_1> vk1, VerificationKey<IV_2> vk2){
+   assert(verify(sp1, vk1));
+   assert(verify(sp2, vk2));
 }
