@@ -8,6 +8,7 @@ struct ProofInner {
     field[2] c;
 }
 
+
 struct Proof<N> {
     ProofInner proof;
     field[N] inputs;
@@ -22,6 +23,7 @@ struct VerificationKey<N> {
     field[N][2] query; // input length + 1
 }
 
+
 def flat<N, F>(field[N][2] input) -> field[F] {
     assert(F == N * 2);
     field[F] mut out = [0; F];
@@ -33,7 +35,10 @@ def flat<N, F>(field[N][2] input) -> field[F] {
     return out;
 }
 
-def main<N, Q>(Proof<N> proof, VerificationKey<Q> vk) -> bool {
+def main<N, Q>(ProofContainer container) -> bool {
+    field N = container.n;
+    field Q = container.q;
+
     assert(Q == N + 1); // query length (Q) should be N + 1
 
     field[8] flat_proof = [
