@@ -1,23 +1,26 @@
 import subprocess 
 import json
 import os
-
+from collections import Counter
 
 def zkmaxLabel(knn_output, K, dir_path):
-    # with open('maxLabel.json', 'r') as f:
-    #     knn_output = json.load(f)
+   
     curr_path = dir_path + '/zkMaxLabel'
     os.chdir(curr_path)
 
     label = knn_output[1::2]
     labels = list(map(str, label))
     labels = labels[0:K]
+    
+    counter = Counter(labels)
+    max_label = counter.most_common(1)[0][0]
+   
 
+    labels.append(max_label)
+    
     with open('size.zok', 'w') as f:
         f.write('const u32 size = {};\n'.format(int(len(labels))))
-    
-    
-
+    print("Max Label: ", labels)
     subprocess.run(["zokrates", "compile", "-i", "maxLabel.zok", "--curve", "bls12_377"])
     subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
     result = subprocess.run(["zokrates", "compute-witness", "--verbose", "-a"] + labels, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -46,4 +49,3 @@ def zkmaxLabel(knn_output, K, dir_path):
     os.chdir(curr_path)
 
     return proof, content[0]
-
