@@ -1,7 +1,6 @@
 import json
 import subprocess
 import sys
-
 def load_composite_proof(paths):
 
     size = len(paths)
@@ -80,5 +79,4 @@ def aggregate_proofs(paths):
     
     
     return proof_data
-          
-# aggregate_proofs(['../zkDist'])
+
