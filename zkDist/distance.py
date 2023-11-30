@@ -93,34 +93,9 @@ def zkDistance(df, datapoint, dir_path=''):
     subprocess.run(["zokrates", "compute-witness", "--verbose", "-a"] + arguments)
     subprocess.run(["zokrates", "generate-proof", "--proving-scheme", "gm17"])
     
-    # output_lines = result.stdout.split('\n')
-    
-    # witness_line = next((line for line in output_lines if "Witness:" in line), None)
-    # if witness_line:
-    #     witness_index = output_lines.index(witness_line)
-    #     witness_array_line = output_lines[witness_index + 1]
-    #     print( witness_array_line ) 
-    # else:
-    #     print("Witness not found in the output.")
-
-
-    # with open('witness_output.txt', 'w') as output_file:
-    #     output_file.write(str(output))
-
-   
-
     with open("proof.json", 'r') as proof_file:
         proof = json.load(proof_file)
-
-
-    # witness = getWitness()
 
     os.chdir(curr_path)
     
     return proof, output    
-
-# df = pd.read_csv('../train.csv')
-# datapoint = [6,3]
-# k = 3
-
-# zkDistance(df, datapoint)
