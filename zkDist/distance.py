@@ -2,6 +2,7 @@ import subprocess
 import json
 import pandas as pd
 import os
+import numpy as np
 
 def getArgsFromJson():
     with open('input.json', 'r') as f:
@@ -24,12 +25,13 @@ def minMaxNormalizationAndInteger(df):
 
     return df
 
-def getDistance(row1, row2):
-    distance = 0
-    for i in range(len(row1)-1):
-        distance += (row1[i] - row2[i])**2
 
-    return distance*distance
+def getDistance(row1, row2):
+    distance = np.int64(0)
+
+    distance = (row1[0] - row2[0])**2 + (row1[1] - row2[1])**2
+
+    return [distance, row2[2]]
 
 
 
@@ -48,7 +50,7 @@ def getWitness():
 
 
 
-def zkDistance(df, datapoint, dir_path):
+def zkDistance(df, datapoint, dir_path=''):
     
     curr_path = dir_path + '/zkDist'
     os.chdir(curr_path)
@@ -56,15 +58,26 @@ def zkDistance(df, datapoint, dir_path):
     datapoint.append(-1)
     df.loc[len(df)] = datapoint   
  
+    distances = []
     normd_df = minMaxNormalizationAndInteger(df)
+    dp0 = normd_df.values[-1][0]
+    dp1 = normd_df.values[-1][1]
+    dp = [dp0, dp1]
+    for value in normd_df.values[:-1]:
+        distances.append(getDistance(dp, value))
 
-    
+
+    output = np.array([str(val) for pair in distances for val in pair])
+    output = output.tolist()
+
 
     flattened_data = list(map(str, normd_df.values.ravel()))
     with open('input.json', 'w') as f:
         json.dump(flattened_data, f)
 
     arguments = getArgsFromJson()
+
+    arguments += output
 
     rows = normd_df.shape[0] - 1
     cols = normd_df.shape[1]
@@ -77,30 +90,37 @@ def zkDistance(df, datapoint, dir_path):
 
     subprocess.run(["zokrates", "compile", "-i", "distance.zok", "--curve", "bls12_377"])
     subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
-    result = subprocess.run(["zokrates", "compute-witness", "--verbose", "-a"] + arguments, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-    
-    output_lines = result.stdout.split('\n')
-    
-    witness_line = next((line for line in output_lines if "Witness:" in line), None)
-    if witness_line:
-        witness_index = output_lines.index(witness_line)
-        witness_array_line = output_lines[witness_index + 1]
-        print( witness_array_line ) 
-    else:
-        print("Witness not found in the output.")
-
-
-    with open('witness_output.txt', 'w') as output_file:
-        output_file.write( witness_array_line)
-
+    subprocess.run(["zokrates", "compute-witness", "--verbose", "-a"] + arguments)
     subprocess.run(["zokrates", "generate-proof", "--proving-scheme", "gm17"])
+    
+    # output_lines = result.stdout.split('\n')
+    
+    # witness_line = next((line for line in output_lines if "Witness:" in line), None)
+    # if witness_line:
+    #     witness_index = output_lines.index(witness_line)
+    #     witness_array_line = output_lines[witness_index + 1]
+    #     print( witness_array_line ) 
+    # else:
+    #     print("Witness not found in the output.")
+
+
+    # with open('witness_output.txt', 'w') as output_file:
+    #     output_file.write(str(output))
+
+   
 
     with open("proof.json", 'r') as proof_file:
         proof = json.load(proof_file)
 
 
-    witness = getWitness()
+    # witness = getWitness()
 
     os.chdir(curr_path)
     
-    return proof, witness    
+    return proof, output    
+
+# df = pd.read_csv('../train.csv')
+# datapoint = [6,3]
+# k = 3
+
+# zkDistance(df, datapoint)
