@@ -1,6 +1,7 @@
 import subprocess 
 import json
 import os
+import numpy as np
 
 def getWitness():
     with open('witness_output.txt', 'r') as file:
@@ -18,6 +19,25 @@ def getWitness():
 
 
 def zkSort(arguments, dir_path):
+
+    witness = []
+    labels = []
+
+    for i in range(0, len(arguments)):
+        if i % 2 == 0:
+            witness.append(int(arguments[i]))
+        else:
+            labels.append(int(arguments[i]))
+
+    structured_arr = np.zeros(len(witness), dtype=[('witness', np.int64), ('label', int)])
+
+    structured_arr['witness'] = witness
+    structured_arr['label'] = labels
+
+    sorted_arr = np.sort(structured_arr, order='witness')
+    output = np.array([str(val) for pair in sorted_arr for val in pair])
+
+    output = output.tolist()
 
     curr_path = dir_path + '/zkSort'
     os.chdir(curr_path)
@@ -45,6 +65,7 @@ def zkSort(arguments, dir_path):
 
     # witness = getWitness()
 
+
     os.chdir(curr_path)
 
-    return proof, witness
+    return proof, output
