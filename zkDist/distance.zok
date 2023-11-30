@@ -15,7 +15,7 @@ def difference(u64 num1, u64 num2) -> u64 {
   };
 }
 
-def main(private u64[rows][cols] points, public u64[test] point) -> u64[rows][test] {
+def main(private u64[rows][cols] points, public u64[test] point, private u64[rows][test] checkDistance) -> u32 {
   
   u64[rows][test] mut arr = [[0; test]; rows];
 
@@ -26,10 +26,10 @@ def main(private u64[rows][cols] points, public u64[test] point) -> u64[rows][te
 
     u64 mut distance = square(dx1) + square(dx2);
     arr[i] = [distance, points[i][2]];
-    
+    assert((checkDistance[i][0] == arr[i][0]) && checkDistance[i][1] == arr[i][1]);
   }
 
 
-  return arr;
+  return 1;
 }
 
