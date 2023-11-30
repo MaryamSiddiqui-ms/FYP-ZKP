@@ -3,15 +3,18 @@ import pandas as pd
 import os
 import subprocess
 import time
+import numpy as np
 
 try:
     sys.path.append('./zkDist')
     sys.path.append('./zkSort')
     sys.path.append('./zkMaxLabel')
+    sys.path.append('./ProofComposition')
     
     from distance import zkDistance
     from sort import zkSort
     from maxLabel import zkmaxLabel
+    from proof_composition import aggregate_proofs
 
 except Exception as e:
     print(e)
@@ -38,7 +41,27 @@ def main():
     # if(verification_status == "FAILED"):
     #     print("Verification Failed!")
     #     return -1
-    zkSortProof, sortWitness = zkSort(distanceWitness, dir_path)
+    witness = []
+    labels = []
+
+    for i in range(0, len(distanceWitness)):
+        if i % 2 == 0:
+            witness.append(int(distanceWitness[i]))
+        else:
+            labels.append(int(distanceWitness[i]))
+
+    structured_arr = np.zeros(len(witness), dtype=[('witness', np.int64), ('label', int)])
+
+    # Populate the structured array
+    structured_arr['witness'] = witness
+    structured_arr['label'] = labels
+
+    sorted_arr = np.sort(structured_arr, order='witness')
+    output = np.array([str(val) for pair in sorted_arr for val in pair])
+
+    output = output.tolist()
+
+    zkSortProof, sortWitness = zkSort(output, dir_path)
     # result = subprocess.run(["zokrates", "verify", "-j", f"{dir_path}/zkSort/proof.json", "-v", f"{dir_path}/zkSort/verification.key"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     # output_lines = result.stdout.split('\n')
     
@@ -56,7 +79,11 @@ def main():
     #     print("Verification Failed!")
     #     return -1
 
-    # final_proof = proof_composition(zkDistProof, zkSortProof, zkmaxLabelProof)
+    paths = ['../zkDist', '../zkSort', '../zkMaxLabel']
+    final_proof = aggregate_proofs(paths)
+
+    print("\nFINAL PROOF\n")
+    print(final_proof)
     
     print(prediction)
     end_time = time.time()
@@ -65,5 +92,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-

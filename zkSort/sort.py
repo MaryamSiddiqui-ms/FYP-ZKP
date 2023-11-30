@@ -21,7 +21,7 @@ def zkSort(arguments, dir_path):
 
     curr_path = dir_path + '/zkSort'
     os.chdir(curr_path)
-    
+    print("This are the arguments: ",arguments)
     with open('size.zok', 'w') as f:
         f.write('const u32 size = {};\n'.format(int(len(arguments)/2)))
 
@@ -48,4 +48,3 @@ def zkSort(arguments, dir_path):
     os.chdir(curr_path)
 
     return proof, witness
-
