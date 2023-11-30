@@ -58,31 +58,31 @@ def main():
 
     output = output.tolist()
 
-    # zkSortProof, sortWitness = zkSort(output, dir_path)
-    # result = subprocess.run(["zokrates", "verify", "-j", f"{dir_path}/zkSort/proof.json", "-v", f"{dir_path}/zkSort/verification.key"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-    # output_lines = result.stdout.split('\n')
+    zkSortProof, sortWitness = zkSort(output, dir_path)
+    result = subprocess.run(["zokrates", "verify", "-j", f"{dir_path}/zkSort/proof.json", "-v", f"{dir_path}/zkSort/verification.key"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    output_lines = result.stdout.split('\n')
     
-    # verification_status = next((line for line in output_lines if "PASSED" in line),"FAILED")
-    # if(verification_status == "FAILED"):
-    #     print("Verification Failed!")
-    #     return -1
+    verification_status = next((line for line in output_lines if "PASSED" in line),"FAILED")
+    if(verification_status == "FAILED"):
+        print("Verification Failed!")
+        return -1
 
-    # zkmaxLabelProof, prediction = zkmaxLabel(sortWitness, k, dir_path)
-    # result = subprocess.run(["zokrates", "verify", "-j", f"{dir_path}/zkMaxLabel/proof.json", "-v", f"{dir_path}/zkMaxLabel/verification.key"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-    # output_lines = result.stdout.split('\n')
+    zkmaxLabelProof, prediction = zkmaxLabel(sortWitness, k, dir_path)
+    result = subprocess.run(["zokrates", "verify", "-j", f"{dir_path}/zkMaxLabel/proof.json", "-v", f"{dir_path}/zkMaxLabel/verification.key"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    output_lines = result.stdout.split('\n')
     
-    # verification_status = next((line for line in output_lines if "PASSED" in line),"FAILED")
-    # if(verification_status == "FAILED"):
-    #     print("Verification Failed!")
-    #     return -1
+    verification_status = next((line for line in output_lines if "PASSED" in line),"FAILED")
+    if(verification_status == "FAILED"):
+        print("Verification Failed!")
+        return -1
 
-    # paths = ['../zkDist', '../zkSort', '../zkMaxLabel']
-    # final_proof = aggregate_proofs(paths)
+    paths = ['../zkDist', '../zkSort', '../zkMaxLabel']
+    final_proof = aggregate_proofs(paths)
 
-    # print("\nFINAL PROOF\n")
-    # print(final_proof)
+    print("\nFINAL PROOF\n")
+    print(final_proof)
     
-    # print(prediction)
+    print(prediction)
     end_time = time.time()
     execution_time = (end_time - start_time) * 1000
     print(execution_time)

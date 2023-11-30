@@ -13,8 +13,8 @@ def zksort<N>(u64[N][2] mut inputs) -> u32 {
     return res;
 }
 
-def main(private u64[size][2] arr) -> u64[size][2] {
+def main(private u64[size][2] arr) -> u32 {
     u32 mut sorted = zksort(arr);
     assert(sorted == 1);
-    return arr;
+    return 1;
 }
