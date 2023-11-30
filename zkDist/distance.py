@@ -24,6 +24,14 @@ def minMaxNormalizationAndInteger(df):
 
     return df
 
+def getDistance(row1, row2):
+    distance = 0
+    for i in range(len(row1)-1):
+        distance += (row1[i] - row2[i])**2
+
+    return distance*distance
+
+
 
 def getWitness():
     with open('witness_output.txt', 'r') as file:
@@ -38,6 +46,8 @@ def getWitness():
     except json.JSONDecodeError as e:
         print("Error decoding JSON:", e)
 
+
+
 def zkDistance(df, datapoint, dir_path):
     
     curr_path = dir_path + '/zkDist'
@@ -47,6 +57,8 @@ def zkDistance(df, datapoint, dir_path):
     df.loc[len(df)] = datapoint   
  
     normd_df = minMaxNormalizationAndInteger(df)
+
+    
 
     flattened_data = list(map(str, normd_df.values.ravel()))
     with open('input.json', 'w') as f:

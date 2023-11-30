@@ -63,18 +63,22 @@ def load_composite_proof(paths):
 
         file.write('}\n')
 
-def run_proof(paths):
-    
-    load_composite_proof(paths)
-    
+def runZKP():
     subprocess.run(["zokrates", "compile", "-i", "nested_proof.zok", "--curve", "bw6_761"])
     subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
     subprocess.run(["powershell.exe", "Get-Content gm17.json |", "zokrates", "compute-witness", "--abi", "--stdin"], stdout=sys.stdout)
     subprocess.run(["zokrates", "generate-proof", "--proving-scheme", "gm17"])
 
-if __name__ == "__main__":
-    paths = ['../zkDist', '../zkSort']
+def aggregate_proofs(paths):
 
-    run_proof(paths)
-
-
+    for path in paths:
+        load_composite_proof([path])
+        runZKP()
+ 
+    with open('proof.json', 'r') as file:
+        proof_data = json.load(file)
+    
+    
+    return proof_data
+          
+# aggregate_proofs(['../zkDist'])
