@@ -1,83 +1,133 @@
+import subprocess 
 import json
-import subprocess
+import pandas as pd
+import os
+import numpy as np
 import sys
 
-def load_composite_proof(paths):
+def getArgsFromJson():
+    with open('input.json', 'r') as f:
+        data = json.load(f)
 
-    size = len(paths)
-    input_lengths = []
+    data = [int(x) for x in data]
+    arguments = list(map(str, data))
+    arguments.pop()
+    return arguments
+
+def minMaxNormalizationAndInteger(df):
+    for column in df.columns:
+        if df[column].dtype == 'float64':
+
+            min_val = df[column].min()
+            max_val = df[column].max()
+            df[column] = (df[column] - min_val) / (max_val - min_val)
+            df[column] = df[column].round(8)
+            df[column] = (df[column] * 10**8).astype(int)
+
+    return df
+
+
+def getDistance(row1, row2):
+    distance = np.int64(0)
+
+    distance = (row1[0] - row2[0])**2 + (row1[1] - row2[1])**2
+
+    return [distance, row2[2]]
+
+
+
+def getWitness():
+    with open('witness_output.txt', 'r') as file:
+        content = file.read()
+
+    try:
+        python_array = json.loads(content)
+        if isinstance(python_array, list):
+            return python_array
+        else:
+            print("The content is not in array format.")
+    except json.JSONDecodeError as e:
+        print("Error decoding JSON:", e)
+
+
+
+def zkDistance(df, datapoint, dir_path=''):
+    
+    # curr_path = dir_path + '/zkDist'
+    # os.chdir(curr_path)
 
     data = []
 
-    for path in paths:
-        proof_path = path + '/proof.json'
-        with open(proof_path, 'r') as file:
-            proof_data = json.load(file)
-        
+    datapoint.append(-1)
+    df.loc[len(df)] = datapoint
+ 
+    distances = []
+    normd_df = minMaxNormalizationAndInteger(df)
 
-        proof_keys = {key: proof_data[key] for key in ('proof', 'inputs')}
-        input_lengths.append(len(proof_keys['inputs'])) 
+    flattened_data = list(map(str, normd_df.values.ravel()))
 
-        data.append(proof_keys)
+    dp0 = normd_df.values[-1][0]
+    dp1 = normd_df.values[-1][1]
 
-    
-    for path in paths:
-        verification = path + '/verification.key'
-        with open(verification, 'r') as file:
-            verification_data = json.load(file)
-        
-        verification_keys = {key: verification_data[key] for key in ('h', 'g_alpha', 'h_beta', 'g_gamma', 'h_gamma', 'query')}
-        
-        data.append(verification_keys)
+    dp = [dp0, dp1]
+
+    for value in normd_df.values[:-1]:
+        distances.append(getDistance(dp, value))
+
+
+    output = np.array([[str(pair[0]), str(pair[1])] for pair in distances])
+    output = output.tolist()
+
+    dp = [str(dp0), str(dp1)]
+
+    df_list = normd_df[:-1].values.tolist()
+    df_list = [list(map(str, sublist)) for sublist in df_list]
+
+    data.append(df_list)
+    data.append(dp)
+    data.append(output)
+
+    # print(output)
+
+
+
+    # arguments = getArgsFromJson()
+
+    # arguments += output
+
+    rows = normd_df.shape[0] - 1
+    cols = normd_df.shape[1]
+
+    with open('input.json', 'w') as f:
+        json.dump(data, f)
 
     with open('size.zok', 'w') as f:
-        for i in range(0, len(input_lengths)):
-            f.write(f'const u32 IN_{i+1} = {input_lengths[i]};\n')
+        f.write('const u32 rows = {};\n'.format(rows))
+        f.write('const u32 cols = {};\n'.format(cols))
+        f.write('const u32 test = {};\n'.format(cols-1))
 
-    with open('gm17.json', 'w') as file:
-        json.dump(data, file)
-
-    with open('nested_proof.zok', 'w') as file:
-        file.write('from "snark/gm17" import main as verify, Proof, VerificationKey;\n')
-        file.write('from "./size.zok" import ')
-        for i in range(0, len(paths)):
-            if i != len(paths) - 1:
-                file.write(f'IN_{i+1},')
-            else:
-                file.write(f'IN_{i+1};\n')
-            
-        for i in range(0, len(paths)):
-            file.write(f'const u32 IV_{i} = IN_{i} + 1;\n')
-        
-        file.write('\n')
-        file.write(f'def main(')
-        for i in range(0, len(paths)):
-            file.write(f'Proof<IN_{i+1}> sp{i+1}, ')
-
-        for i in range(0, len(paths)):
-            if i != 0:
-                file.write(f', VerificationKey<IN_{i+1}> vk{i+1}')
-            else:
-                file.write(f'VerificationKey<IN_{i+1}> vk{i+1}')
-
-        file.write('){\n')
-        for i in range(0, len(paths)):
-            file.write(f'   assert(verify(sp{i+1}, vk{i+1}));\n')
-
-        file.write('}\n')
-
-def run_proof(paths):
+    subprocess.run(["zokrates", "compile", "-i", "test.zok", "--curve", "bls12_377"])
+    subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
+    subprocess.run(["powershell.exe", "Get-Content input.json |", "zokrates", "compute-witness", "--abi", "--stdin"], stdout=sys.stdout)
+    subprocess.run(["zokrates", "generate-proof", "--proving-scheme", "gm17"])
     
-    load_composite_proof(paths)
+    with open("proof.json", 'r') as proof_file:
+        proof = json.load(proof_file)
+
+    # os.chdir(dir_path)
     
-    # subprocess.run(["zokrates", "compile", "-i", "nested_proof.zok", "--curve", "bw6_761"])
-    # subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
-    # command = "zokrates compute-witness --abi --stdin < gm17.json"
-    # subprocess.run(["powershell.exe", "Get-Content gm17.json |", "zokrates", "compute-witness", "--abi", "--stdin"], stdout=sys.stdout)
-    # subprocess.run(["zokrates", "generate-proof", "--proving-scheme", "gm17"])
+    return proof, output    
 
-if __name__ == "__main__":
-    paths = ['../zkDist', '../zkSort', '../zkMaxLabel']
+def testFun():
+    subprocess.run(["zokrates", "compile", "-i", "test.zok", "--curve", "bls12_377"])
+    subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
+    subprocess.run(["powershell.exe", "Get-Content input.json |", "zokrates", "compute-witness", "--abi", "--stdin"], stdout=sys.stdout)
+    subprocess.run(["zokrates", "generate-proof", "--proving-scheme", "gm17"])
+    
+    with open("proof.json", 'r') as proof_file:
+        proof = json.load(proof_file)
 
-    run_proof(paths)
 
+df = pd.read_csv('../train.csv')
+datapoint = [6,3]
+zkDistance(df, datapoint)
