@@ -25,7 +25,7 @@ def main():
     dir_path = os.getcwd()
 
 
-    df = pd.read_csv('train.csv')
+    df = pd.read_csv('./dataset/train.csv')
     datapoint = [6,3]
     k = 3
     start_time = time.time()
@@ -62,11 +62,11 @@ def main():
     #     print("Verification Failed!")
     #     return -1
 
-    # paths = ['../zkDist', '../zkSort', '../zkMaxLabel']
-    # final_proof = aggregate_proofs(paths)
+    paths = ['../zkDist', '../zkSort', '../zkMaxLabel']
+    final_proof = aggregate_proofs(paths, dir_path)
 
-    # print("\nFINAL PROOF\n")
-    # print(final_proof)
+    print("\nFINAL PROOF\n")
+    print(final_proof)
     
     print(prediction)
     end_time = time.time()

@@ -1,8 +1,10 @@
 import json
 import subprocess
 import sys
-def load_composite_proof(paths):
+import os
 
+def load_composite_proof(paths):
+    
     size = len(paths)
     input_lengths = []
 
@@ -68,7 +70,9 @@ def runZKP():
     subprocess.run(["powershell.exe", "Get-Content gm17.json |", "zokrates", "compute-witness", "--abi", "--stdin"], stdout=sys.stdout)
     subprocess.run(["zokrates", "generate-proof", "--proving-scheme", "gm17"])
 
-def aggregate_proofs(paths):
+def aggregate_proofs(paths, dir_path):
+    curr_path = dir_path + '/ProofComposition'
+    os.chdir(curr_path)
 
     for path in paths:
         load_composite_proof([path])
@@ -77,6 +81,7 @@ def aggregate_proofs(paths):
     with open('proof.json', 'r') as file:
         proof_data = json.load(file)
     
+    os.chdir(dir_path)
     
     return proof_data
 
