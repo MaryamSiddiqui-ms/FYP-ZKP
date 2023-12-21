@@ -49,6 +49,6 @@ def zkmaxLabel(knn_output, K, dir_path):
         content = json.load(file)
         print("Prediction: ", content[0])
 
-    os.chdir(curr_path)
+    os.chdir(dir_path)
 
     return proof, content[0]
