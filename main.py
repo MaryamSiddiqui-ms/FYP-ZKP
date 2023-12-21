@@ -62,11 +62,11 @@ def main():
     #     print("Verification Failed!")
     #     return -1
 
-    paths = ['../zkDist', '../zkSort', '../zkMaxLabel']
-    final_proof = aggregate_proofs(paths)
+    # paths = ['../zkDist', '../zkSort', '../zkMaxLabel']
+    # final_proof = aggregate_proofs(paths)
 
-    print("\nFINAL PROOF\n")
-    print(final_proof)
+    # print("\nFINAL PROOF\n")
+    # print(final_proof)
     
     print(prediction)
     end_time = time.time()

@@ -1,0 +1,36 @@
+from "./size.zok" import rows;
+from "./size.zok" import cols;
+from "./size.zok" import test;
+
+
+def square(u64 num) -> u64 {
+  return num * num;
+}
+
+def difference(u64 num1, u64 num2) -> u64 {
+  return if num1 >= num2 {
+    num1 - num2
+  }
+  else{
+    num2 - num1
+  };
+}
+
+def main(private u64[rows][cols] points, public u64[test] point, private u64[rows][test] checkDistance) -> u32 {
+  
+  u64[rows][test] mut arr = [[0; test]; rows];
+
+  for u32 i in 0..rows {
+
+    u64 mut dx1 = difference(points[i][0], point[0]);
+    u64 mut dx2 = difference(points[i][1], point[1]);
+
+    u64 mut distance = square(dx1) + square(dx2);
+    arr[i] = [distance, points[i][2]];
+    assert((checkDistance[i][0] == arr[i][0]) && checkDistance[i][1] == arr[i][1]);
+  }
+
+
+  return 1;
+}
+

@@ -2,6 +2,7 @@ import subprocess
 import json
 import os
 import numpy as np
+import sys
 
 def getWitness():
     with open('witness_output.txt', 'r') as file:
@@ -18,46 +19,49 @@ def getWitness():
 
 
 
-def zkSort(arguments, dir_path):
+def zkSort(arguments, dir_path=''):
 
     witness = []
     labels = []
+    data = []
 
-    for i in range(0, len(arguments)):
-        if i % 2 == 0:
-            witness.append(int(arguments[i]))
-        else:
-            labels.append(int(arguments[i]))
+    print(arguments)
 
-    structured_arr = np.zeros(len(witness), dtype=[('witness', np.int64), ('label', int)])
+    list_of_integers = [[int(i) for i in sublist] for sublist in arguments]
+    list_of_integers.sort(key=lambda x: x[0])
+    sorted_arr = [[str(i) for i in sublist] for sublist in list_of_integers]
 
-    structured_arr['witness'] = witness
-    structured_arr['label'] = labels
+    print(sorted_arr)
 
-    sorted_arr = np.sort(structured_arr, order='witness')
-    output = np.array([str(val) for pair in sorted_arr for val in pair])
+    # for i in range(0, len(arguments)):
+    #     if i % 2 == 0:
+    #         witness.append(int(arguments[i]))
+    #     else:
+    #         labels.append(int(arguments[i]))
 
-    output = output.tolist()
+    # structured_arr = np.zeros(len(witness), dtype=[('witness', np.int64), ('label', int)])
+
+    # structured_arr['witness'] = witness
+    # structured_arr['label'] = labels
+
+    # sorted_arr = np.sort(structured_arr, order='witness')
+    # output = np.array([str(val) for pair in sorted_arr for val in pair])
+
+    # output = output.tolist()
 
     curr_path = dir_path + '/zkSort'
     os.chdir(curr_path)
-    print("This are the arguments: ",arguments)
+    # print("This are the arguments: ",arguments)
+
     with open('size.zok', 'w') as f:
-        f.write('const u32 size = {};\n'.format(int(len(arguments)/2)))
+        f.write('const u32 size = {};\n'.format(int(len(arguments))))
+
+    with open('input.json', 'w') as f:
+        json.dump([sorted_arr], f)
 
     subprocess.run(["zokrates", "compile", "-i", "sortver.zok", "--curve", "bls12_377"])
     subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
-    result = subprocess.run(["zokrates", "compute-witness", "--verbose", "-a"] + arguments, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-    # output_lines = result.stdout.split('\n')
-    # witness_line = next((line for line in output_lines if "Witness:" in line), None)
-    # if witness_line:
-    #     witness_index = output_lines.index(witness_line)
-    #     witness_array_line = output_lines[witness_index + 1]
-    #     print( witness_array_line ) 
-    # else:
-    #     print("Witness not found in the output.")
-    # with open('witness_output.txt', 'w') as output_file:
-    #     output_file.write(witness_array_line)
+    subprocess.run(["powershell.exe", "Get-Content input.json |", "zokrates", "compute-witness", "--abi", "--stdin"], stdout=sys.stdout)
         
     subprocess.run(["zokrates", "generate-proof", "--proving-scheme", "gm17"])
     with open("proof.json", 'r') as proof_file:
@@ -68,4 +72,4 @@ def zkSort(arguments, dir_path):
 
     os.chdir(curr_path)
 
-    return proof, output
+    return proof, sorted_arr

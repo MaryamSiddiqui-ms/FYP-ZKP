@@ -3,6 +3,7 @@ import json
 import pandas as pd
 import os
 import numpy as np
+import sys
 
 def getArgsFromJson():
     with open('input.json', 'r') as f:
@@ -55,33 +56,50 @@ def zkDistance(df, datapoint, dir_path=''):
     curr_path = dir_path + '/zkDist'
     os.chdir(curr_path)
 
+    data = []
+
     datapoint.append(-1)
-    df.loc[len(df)] = datapoint   
+    df.loc[len(df)] = datapoint
  
     distances = []
     normd_df = minMaxNormalizationAndInteger(df)
+
+    flattened_data = list(map(str, normd_df.values.ravel()))
+
     dp0 = normd_df.values[-1][0]
     dp1 = normd_df.values[-1][1]
+
     dp = [dp0, dp1]
+
     for value in normd_df.values[:-1]:
         distances.append(getDistance(dp, value))
 
 
-    output = np.array([str(val) for pair in distances for val in pair])
+    output = np.array([[str(pair[0]), str(pair[1])] for pair in distances])
     output = output.tolist()
 
+    dp = [str(dp0), str(dp1)]
 
-    flattened_data = list(map(str, normd_df.values.ravel()))
-    with open('input.json', 'w') as f:
-        json.dump(flattened_data, f)
+    df_list = normd_df[:-1].values.tolist()
+    df_list = [list(map(str, sublist)) for sublist in df_list]
 
-    arguments = getArgsFromJson()
+    data.append(df_list)
+    data.append(dp)
+    data.append(output)
 
-    arguments += output
+    # print(output)
+
+
+
+    # arguments = getArgsFromJson()
+
+    # arguments += output
 
     rows = normd_df.shape[0] - 1
     cols = normd_df.shape[1]
 
+    with open('input.json', 'w') as f:
+        json.dump(data, f)
 
     with open('size.zok', 'w') as f:
         f.write('const u32 rows = {};\n'.format(rows))
@@ -90,12 +108,26 @@ def zkDistance(df, datapoint, dir_path=''):
 
     subprocess.run(["zokrates", "compile", "-i", "distance.zok", "--curve", "bls12_377"])
     subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
-    subprocess.run(["zokrates", "compute-witness", "--verbose", "-a"] + arguments)
+    subprocess.run(["powershell.exe", "Get-Content input.json |", "zokrates", "compute-witness", "--abi", "--stdin"], stdout=sys.stdout)
     subprocess.run(["zokrates", "generate-proof", "--proving-scheme", "gm17"])
     
     with open("proof.json", 'r') as proof_file:
         proof = json.load(proof_file)
 
-    os.chdir(curr_path)
+    os.chdir(dir_path)
     
     return proof, output    
+
+def testFun():
+    subprocess.run(["zokrates", "compile", "-i", "test.zok", "--curve", "bls12_377"])
+    subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
+    subprocess.run(["powershell.exe", "Get-Content input.json |", "zokrates", "compute-witness", "--abi", "--stdin"], stdout=sys.stdout)
+    subprocess.run(["zokrates", "generate-proof", "--proving-scheme", "gm17"])
+    
+    with open("proof.json", 'r') as proof_file:
+        proof = json.load(proof_file)
+
+
+# df = pd.read_csv('../train.csv')
+# datapoint = [6,3]
+# zkDistance(df, datapoint)
