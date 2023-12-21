@@ -1,3 +1,0 @@
-const u32 rows = 5;
-const u32 cols = 3;
-const u32 test = 2;
