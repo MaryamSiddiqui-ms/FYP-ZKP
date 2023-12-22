@@ -12,8 +12,7 @@ def zkmaxLabel(knn_output, K, dir_path):
 
     truncated = knn_output[:K]
     labels = [sublist[1] for sublist in truncated]
-    # labels = list(map(str, label))
-    # labels = labels[0:K]
+
     
     counter = Counter(labels)
     max_label = counter.most_common(1)[0][0]
