@@ -14,7 +14,9 @@ try:
     sys.path.append('./zkSort')
     sys.path.append('./zkMaxLabel')
     sys.path.append('./ProofComposition')
-    
+    sys.path.append('./utils')
+
+    from minMaxNormalizationAndInteger import minMaxNormalizationAndInteger
     from distance import zkDistance
     from sort import zkSort
     from maxLabel import zkmaxLabel
@@ -47,7 +49,7 @@ def main(req: Item):
     start_time = time.time()
     print(datapoint)
 
-    zkDistProof, distanceWitness = zkDistance(df, datapoint, dir_path)
+    zkDistProof, distanceWitness = zkDistance(df, datapoint, dir_path, minMaxNormalizationAndInteger)
 
     zkSortProof, sortWitness = zkSort(distanceWitness, dir_path)
 

@@ -4,6 +4,12 @@ import pandas as pd
 import os
 import numpy as np
 import sys
+try:
+    sys.path.append('../utils')
+    from minMaxNormalizationAndInteger import minMaxNormalizationAndInteger
+except Exception as e:
+    print(e)
+
 
 def getArgsFromJson():
     with open('input.json', 'r') as f:
@@ -13,19 +19,6 @@ def getArgsFromJson():
     arguments = list(map(str, data))
     arguments.pop()
     return arguments
-
-def minMaxNormalizationAndInteger(df):
-    for column in df.columns:
-        if df[column].dtype == 'float64':
-
-            min_val = df[column].min()
-            max_val = df[column].max()
-            df[column] = (df[column] - min_val) / (max_val - min_val)
-            df[column] = df[column].round(8)
-            df[column] = (df[column] * 10**8).astype(int)
-
-    return df
-
 
 def getDistance(row1, row2):
     distance = np.int64(0)
@@ -87,13 +80,6 @@ def zkDistance(df, datapoint, dir_path=''):
     data.append(dp)
     data.append(output)
 
-    # print(output)
-
-
-
-    # arguments = getArgsFromJson()
-
-    # arguments += output
 
     rows = normd_df.shape[0] - 1
     cols = normd_df.shape[1]
@@ -127,7 +113,3 @@ def testFun():
     with open("proof.json", 'r') as proof_file:
         proof = json.load(proof_file)
 
-
-# df = pd.read_csv('../train.csv')
-# datapoint = [6,3]
-# zkDistance(df, datapoint)
