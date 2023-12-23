@@ -4,12 +4,7 @@ import pandas as pd
 import os
 import numpy as np
 import sys
-try:
-    sys.path.append('../utils')
-    from minMaxNormalizationAndInteger import minMaxNormalizationAndInteger
-except Exception as e:
-    print(e)
-
+from minMaxNormalizationAndInteger import minMaxNormalizationAndInteger
 
 def getArgsFromJson():
     with open('input.json', 'r') as f:

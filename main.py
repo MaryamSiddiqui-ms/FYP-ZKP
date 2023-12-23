@@ -9,6 +9,17 @@ from fastapi import FastAPI, Request, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+current_file_path = os.path.abspath(__file__)
+
+# Derive the project path by moving up one directory from the current script's path
+project_path = os.path.dirname(os.path.dirname(current_file_path))
+
+# Get the current PYTHONPATH or an empty string if it doesn't exist
+current_pythonpath = os.environ.get('PYTHONPATH', '')
+
+# Append the project path to PYTHONPATH, separated by a semicolon (;) on Windows
+os.environ['PYTHONPATH'] = f"{project_path};{current_pythonpath}"
+
 try:
     sys.path.append('./zkDist')
     sys.path.append('./zkSort')
@@ -17,6 +28,7 @@ try:
     sys.path.append('./utils')
 
     from minMaxNormalizationAndInteger import minMaxNormalizationAndInteger
+    from clean import clean_dirs
     from distance import zkDistance
     from sort import zkSort
     from maxLabel import zkmaxLabel
@@ -38,7 +50,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
+clean_dirs()
 @app.post("/")
 def main(req: Item):
     dir_path = os.getcwd()
@@ -49,7 +61,7 @@ def main(req: Item):
     start_time = time.time()
     print(datapoint)
 
-    zkDistProof, distanceWitness = zkDistance(df, datapoint, dir_path, minMaxNormalizationAndInteger)
+    zkDistProof, distanceWitness = zkDistance(df, datapoint, dir_path)
 
     zkSortProof, sortWitness = zkSort(distanceWitness, dir_path)
 
