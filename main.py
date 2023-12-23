@@ -10,14 +10,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 current_file_path = os.path.abspath(__file__)
-
-# Derive the project path by moving up one directory from the current script's path
 project_path = os.path.dirname(os.path.dirname(current_file_path))
-
-# Get the current PYTHONPATH or an empty string if it doesn't exist
 current_pythonpath = os.environ.get('PYTHONPATH', '')
-
-# Append the project path to PYTHONPATH, separated by a semicolon (;) on Windows
 os.environ['PYTHONPATH'] = f"{project_path};{current_pythonpath}"
 
 try:
@@ -41,7 +35,7 @@ except Exception as e:
 
 class Item(BaseModel):
     dx: float
-    dy: float
+    dy: int
 
 app = FastAPI()
 app.add_middleware(
@@ -56,15 +50,24 @@ def main(req: Item):
     dir_path = os.getcwd()
 
     df = pd.read_csv('./dataset/diabetes-sub.csv')
-    datapoint = [req.dx, req.dy]
     k = 3
+
+    # datapoint = [req.dx, req.dy]
+    # datapoint.append(-1)
+    # df.loc[len(df)] = datapoint
+
+    df['BMI'].loc[len(df)] = req.dx
+    df['Age'].loc[len(df)] = req.dy
+    df['Outcome'].loc[len(df)] = -1
+ 
+    distances = []
+    normd_df = minMaxNormalizationAndInteger(df)
+    # print(datapoint)
+    
     start_time = time.time()
-    print(datapoint)
 
-    zkDistProof, distanceWitness = zkDistance(df, datapoint, dir_path)
-
+    zkDistProof, distanceWitness = zkDistance(normd_df, dir_path)
     zkSortProof, sortWitness = zkSort(distanceWitness, dir_path)
-
     zkmaxLabelProof, prediction = zkmaxLabel(sortWitness, k, dir_path)
 
     paths = ['../zkDist', '../zkSort', '../zkMaxLabel']

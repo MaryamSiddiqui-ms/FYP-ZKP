@@ -4,7 +4,7 @@ import pandas as pd
 import os
 import numpy as np
 import sys
-from minMaxNormalizationAndInteger import minMaxNormalizationAndInteger
+# from minMaxNormalizationAndInteger import minMaxNormalizationAndInteger
 
 def getArgsFromJson():
     with open('input.json', 'r') as f:
@@ -39,18 +39,13 @@ def getWitness():
 
 
 
-def zkDistance(df, datapoint, dir_path=''):
+def zkDistance(normd_df, dir_path=''):
     
     curr_path = dir_path + '/zkDist'
     os.chdir(curr_path)
 
     data = []
-
-    datapoint.append(-1)
-    df.loc[len(df)] = datapoint
- 
-    distances = []
-    normd_df = minMaxNormalizationAndInteger(df)
+    distances=[]
 
     flattened_data = list(map(str, normd_df.values.ravel()))
 
