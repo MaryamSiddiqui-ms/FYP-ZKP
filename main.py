@@ -40,8 +40,8 @@ except Exception as e:
 
 
 class Item(BaseModel):
-    dx: int
-    dy: int
+    dx: float
+    dy: float
 
 app = FastAPI()
 app.add_middleware(
@@ -55,7 +55,7 @@ clean_dirs()
 def main(req: Item):
     dir_path = os.getcwd()
 
-    df = pd.read_csv('./dataset/train.csv')
+    df = pd.read_csv('./dataset/diabetes-sub.csv')
     datapoint = [req.dx, req.dy]
     k = 3
     start_time = time.time()
