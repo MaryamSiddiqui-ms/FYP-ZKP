@@ -2,28 +2,38 @@
 from "./size.zok" import size;
 
 const u64 MAX_POS_VAL = 9223372036854775807;
+const u32 nsize = size -1;
 
 def gt(u64 a, u64 b) -> bool {
     return (b - a) > MAX_POS_VAL;
 }
 
 
-def argmax<N>(u64[N] inputs) -> u32 {
-    u64 mut max = inputs[0];
+// def argmax<N>(u64[N] arr) -> u32 {
+//     u64 mut max = inputs[0];
+//     u32 mut res = 0;
+//     u32 mut idx = 0;
+//     for u32 i in 1..N {
+//         u64 val = inputs[i];
+//         res = if gt(val, max) { i } else { res };
+//         max = if gt(val, max) { val } else { max };
+//     }
+//     return res;
+// }
+
+
+def main(private u64[size] arr, public u32 index) ->u32 {
+    // u32 mut max = argmax(arr);
+    // assert(max == index);
+     u64 mut max = arr[0];
     u32 mut res = 0;
     u32 mut idx = 0;
-    for u32 i in 1..N {
-        u64 val = inputs[i];
+    for u32 i in 1..nsize {
+        u64 val = arr[i];
         res = if gt(val, max) { i } else { res };
         max = if gt(val, max) { val } else { max };
     }
+    assert(res == index);
     return res;
-}
-
-
-def main(private u64[size] arr, public u32 index) {
-    u32 mut max = argmax(arr);
-    assert(max == index);
-    return;
 }
 
