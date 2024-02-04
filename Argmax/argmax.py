@@ -18,14 +18,12 @@ print("MAX", max_index)
 arguments.append(str(max_index))
 print(arguments)
 
-# with open('size.zok', 'w') as f:
-#         f.write('const u32 size = {};\n'.format(int(len(arguments))))
+size = int(len(arguments)) -1
+with open('size.zok', 'w') as f:
+        f.write('const u32 size = {};\n'.format(size))
 
 def zkArgmax():
     subprocess.run(["zokrates", "compile", "-i", "argmax.zok","--curve", "bls12_377"])
-    # subprocess.run(["zokrates", "setup"])
-    # subprocess.run(["zokrates", "compute-witness", "-a"] + arguments)
-    # subprocess.run(["zokrates", "generate-proof"])
     subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
     result = subprocess.run(["zokrates", "compute-witness", "--verbose", "-a"] + arguments, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     
@@ -52,11 +50,5 @@ def zkArgmax():
     with open('witness_output.txt', 'r') as file:
         content = json.load(file)
         print("Prediction: ", content[0])
-
-
-size = 5
-
-with open('size.zok', 'w') as f:
-    f.write('const u32 size = {};\n'.format(size))
 
 zkArgmax()
