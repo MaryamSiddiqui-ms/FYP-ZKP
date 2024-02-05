@@ -1,0 +1,44 @@
+from "./size.zok" import treeSize;
+from "./size.zok" import numClasses;
+
+struct Node {
+    u32 feature_idx;
+    u32 feature_val;
+    field[numClasses] prediction_probs;
+    bool isLeafNode;
+}
+
+def traverse(Node[treeSize] tree, u32[numClasses] X) -> field[numClasses] {
+
+    Node mut node = tree[0];
+    field[numClasses] pred_probs = node.prediction_probs;
+    u32 mut index = 0;
+
+    for u32 i in 0..treeSize {
+
+        node = tree[index];
+
+        index = if (X[node.feature_idx] < node.feature_val) && node.isLeafNode {
+            index*2 + 1
+        } else {
+            index*2 + 2
+        };
+    }
+
+    return node.prediction_probs;
+
+}
+
+
+
+def main(private Node[treeSize] tree, private u32[numClasses] X, private field[numClasses] finalProbs) {
+    
+    field[numClasses] mut pred_probs = traverse(tree, X);
+
+    for u32 i in 0..numClasses {
+        assert(pred_probs[i] == finalProbs[i]);
+    }
+
+    return;
+    
+}
