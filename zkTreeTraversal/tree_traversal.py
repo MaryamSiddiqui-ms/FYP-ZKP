@@ -22,10 +22,14 @@ def _predict_one_sample(nodes, X: np.array) -> np.array:
 
     return pred_probs
 
-def zkTreeTraversal(tree, treeSize, numClasses, num_features, X_test, dir_path=''):
+def zkTreeTraversal(tree, X_test, dir_path=''):
     
     # curr_path = dir_path + '/zkTreeTraversal'
     # os.chdir(curr_path)
+
+    treeSize = len(tree)
+    numClasses = len(tree[0].prediction_probs)
+    num_features = len(X_test)
 
     probs = _predict_one_sample(tree, X_test)
 

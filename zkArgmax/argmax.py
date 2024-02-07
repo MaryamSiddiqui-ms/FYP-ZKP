@@ -1,11 +1,6 @@
 import subprocess 
 import json
 
-"""
-    Takes 6 integers [ 5 for the private array, and 1 for the public index ]
-    Outputs: Proof.
-"""
-
 with open('argmax.json', 'r') as f:
     data = json.load(f)
 
@@ -22,7 +17,11 @@ size = int(len(arguments)) -1
 with open('size.zok', 'w') as f:
         f.write('const u32 size = {};\n'.format(size))
 
-def zkArgmax():
+def zkArgmax(output_probs):
+
+    with open('argmax.json', 'w') as f:
+        json.dump(output_probs, f)
+
     subprocess.run(["zokrates", "compile", "-i", "argmax.zok","--curve", "bls12_377"])
     subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
     result = subprocess.run(["zokrates", "compute-witness", "--verbose", "-a"] + arguments, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -51,4 +50,6 @@ def zkArgmax():
         content = json.load(file)
         print("Prediction: ", content[0])
 
-zkArgmax()
+    return proof, content[0]
+
+# zkArgmax()

@@ -35,4 +35,23 @@ class DecisionTree:
 
     treeArr = []
     X_test = []
+
+    _executionTime=0
+    
+    def run_inference():
+        start_time = time.time()
+        zkTreeTraversalProof, TreeTraversalWitness = zkTreeTraversal(treeArr, X_test)
+        zkArgmaxProof, prediction = zkArgmax(TreeTraversalWitness)
+
+        paths = ['../zkTreeTraversal', '../zkArgmax']
+        final_proof = aggregate_proofs(paths, dir_path)
+
+        end_time = time.time()
+        _executionTime = end_time - start_time
+
+        return prediction
+
+    
+
+
     
