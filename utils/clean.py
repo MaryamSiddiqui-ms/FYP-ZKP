@@ -2,7 +2,7 @@ import os
 import glob
 
 def clean_dirs():
-    directories = ['./','../zkDist', '../zkSort', '../zkMaxLabel', '../', '../ProofComposition']
+    directories = ['./','../zkDist', '../zkSort', '../zkMaxLabel', '../', '../ProofComposition', '../zkTreeTraversal']
     filenames = ['abi.json', 'out', 'out.r1cs', 'out.wtns', 'proof.json', 'proving.key', 'verification.key', 'witness', 'witness_output.txt', 'size.zok', 'input.json', 'gm17.json', 'nested_proof.zok']
 
     for directory in directories:

@@ -1,39 +1,43 @@
 from "./size.zok" import treeSize;
 from "./size.zok" import numClasses;
+from "./size.zok" import numFeatures;
 
 struct Node {
     u32 feature_idx;
-    u32 feature_val;
-    field[numClasses] prediction_probs;
+    u64 feature_val;
+    u64[numClasses] prediction_probs;
     bool isLeafNode;
 }
 
-def traverse(Node[treeSize] tree, u32[numClasses] X) -> field[numClasses] {
+def traverse(Node[treeSize] tree, u64[numFeatures] X, u32 mut index) -> u64[numClasses] {
 
-    Node mut node = tree[0];
-    field[numClasses] pred_probs = node.prediction_probs;
-    u32 mut index = 0;
-
-    for u32 i in 0..treeSize {
-
-        node = tree[index];
-
-        index = if (X[node.feature_idx] < node.feature_val) && node.isLeafNode {
+    Node mut node = tree[index];
+    
+    for u32 i in 0..treeSize{
+        u32 tmp = index;
+        node =  tree[index];
+        index = if (X[node.feature_idx] < node.feature_val) {
             index*2 + 1
         } else {
             index*2 + 2
         };
+
+        index = if node.isLeafNode {
+            tmp
+        } else{
+            index
+        };
     }
 
     return node.prediction_probs;
-
 }
 
 
 
-def main(private Node[treeSize] tree, private u32[numClasses] X, private field[numClasses] finalProbs) {
+def main(private Node[treeSize] tree, private u64[numFeatures] X, private u64[numClasses] finalProbs) {
     
-    field[numClasses] mut pred_probs = traverse(tree, X);
+    u32 mut index = 0;
+    u64[numClasses] pred_probs = traverse(tree, X, index);
 
     for u32 i in 0..numClasses {
         assert(pred_probs[i] == finalProbs[i]);
