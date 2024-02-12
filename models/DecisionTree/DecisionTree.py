@@ -15,12 +15,18 @@ current_pythonpath = os.environ.get('PYTHONPATH', '')
 os.environ['PYTHONPATH'] = f"{project_path};{current_pythonpath}"
 
 try:
-    sys.path.append('..\..\zkTreeTraversal')
-    sys.path.append('..\..\zkArgmax')
+    sys.path.append('../../zkTreeTraversal')
+    sys.path.append('../../zkArgmax')
     sys.path.append('../../ProofComposition')
     sys.path.append('../../utils')
 
-    
+    # for directory in sys.path:
+    #     try:
+    #         file_list = os.listdir(directory)
+    #         print(f"Files in {directory}: {file_list}")
+    #     except FileNotFoundError:
+    #         print(f"Directory not found: {directory}")
+            
     from clean import clean_dirs
     from maxDepth import maxDepth
     from treeToArray import treeToArray
