@@ -74,9 +74,9 @@ def aggregate_proofs(paths, dir_path):
     curr_path = dir_path + '/ProofComposition'
     os.chdir(curr_path)
 
-    for path in paths:
-        load_composite_proof([path])
-        runZKP()
+    # for path in paths:
+    #     load_composite_proof([path])
+    #     runZKP()
  
     with open('proof.json', 'r') as file:
         proof_data = json.load(file)
