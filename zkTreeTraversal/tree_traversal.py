@@ -27,6 +27,7 @@ def _predict_one_sample(nodes, X: np.array) -> np.array:
 def zkTreeTraversal(tree, X_test, dir_path=''):
     
     curr_path = dir_path + '/zkTreeTraversal'
+    print(curr_path)
     os.chdir(curr_path)
 
     treeSize = len(tree)
