@@ -1,22 +1,24 @@
 import subprocess 
 import json
-import os
+def getArguments():
+    with open('argmax.json', 'r') as f:
+        data = json.load(f)
 
-# with open('argmax.json', 'r') as f:
-#     data = json.load(f)
+    data = [int(x) for x in data]
+    arguments = list(map(str, data))
 
-# data = [int(x) for x in data]
-# arguments = list(map(str, data))
+    max_index = data.index(max(data))
+    print("MAX", max_index)
 
-# max_index = data.index(max(data))
-# print("MAX", max_index)
+    arguments.append(str(max_index))
+    print(arguments)
+    
+    return arguments
 
-# arguments.append(str(max_index))
-# print(arguments)
-
-# size = int(len(arguments)) -1
-# with open('size.zok', 'w') as f:
-#         f.write('const u32 size = {};\n'.format(size))
+def setSize(arguments):
+    size = int(len(arguments)) -1
+    with open('size.zok', 'w') as f:
+            f.write('const u32 size = {};\n'.format(size))
 
 def zkArgmax(output_probs, dir_path):
 
@@ -25,6 +27,9 @@ def zkArgmax(output_probs, dir_path):
 
     with open('argmax.json', 'w') as f:
         json.dump(output_probs, f)
+    
+    arguments = getArguments()
+    setSize(arguments)
 
     subprocess.run(["zokrates", "compile", "-i", "argmax.zok","--curve", "bls12_377"])
     subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
