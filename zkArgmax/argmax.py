@@ -1,5 +1,7 @@
 import subprocess 
 import json
+import os
+
 def getArguments():
     with open('argmax.json', 'r') as f:
         data = json.load(f)
@@ -53,7 +55,6 @@ def zkArgmax(output_probs, dir_path):
     with open("proof.json", 'r') as proof_file:
         proof = json.load(proof_file)
     
-    # print(proof)
     
     with open('witness_output.txt', 'r') as file:
         content = json.load(file)
@@ -62,5 +63,3 @@ def zkArgmax(output_probs, dir_path):
     os.chdir(dir_path)
 
     return proof, content[0]
-
-# zkArgmax()
