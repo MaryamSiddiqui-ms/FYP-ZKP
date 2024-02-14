@@ -5,7 +5,7 @@ def treeToArray(node,arraySize):
   array = [{
                 'feature_idx': 0,
                 'feature_val': 0,
-                'prediction_probs': np.zeros(3),
+                'prediction_probs': [0,0,0],
                 'isLeafNode': 1
             }] * arraySize
   queue = [(node,0)]
