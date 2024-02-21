@@ -1,5 +1,7 @@
 import subprocess 
 import json
+import os
+
 def getArguments():
     with open('argmax.json', 'r') as f:
         data = json.load(f)
@@ -20,7 +22,10 @@ def setSize(arguments):
     with open('size.zok', 'w') as f:
             f.write('const u32 size = {};\n'.format(size))
 
-def zkArgmax(output_probs):
+def zkArgmax(output_probs, dir_path):
+
+    curr_path = dir_path + '/zkArgmax'
+    os.chdir(curr_path)
 
     with open('argmax.json', 'w') as f:
         json.dump(output_probs, f)
@@ -50,12 +55,11 @@ def zkArgmax(output_probs):
     with open("proof.json", 'r') as proof_file:
         proof = json.load(proof_file)
     
-    # print(proof)
     
     with open('witness_output.txt', 'r') as file:
         content = json.load(file)
         print("Prediction: ", content[0])
 
-    return proof, content[0]
+    os.chdir(dir_path)
 
-# zkArgmax()
+    return proof, content[0]

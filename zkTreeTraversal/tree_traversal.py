@@ -4,9 +4,13 @@ import json
 import os
 import sys
 
+
+sys.path.append('../utils')
+
+from minMaxNormalizationAndInteger import minMaxNormalizationAndIntegerList
+
 def _predict_one_sample(nodes, X: np.array) -> np.array:
     """Returns prediction for 1 dim array"""
-    # Assuming the root node is at index 0
     node_index = 0
 
 
@@ -27,8 +31,9 @@ def _predict_one_sample(nodes, X: np.array) -> np.array:
 def zkTreeTraversal(tree, X_test, dir_path=''):
     
     curr_path = dir_path + '/zkTreeTraversal'
-    print(curr_path)
     os.chdir(curr_path)
+
+    X_test = minMaxNormalizationAndIntegerList(X_test)
 
     treeSize = len(tree)
     numClasses = len(tree[0]["prediction_probs"])
@@ -45,7 +50,7 @@ def zkTreeTraversal(tree, X_test, dir_path=''):
             "feature_idx": str(node["feature_idx"]),
             "feature_val": str(node["feature_val"]),
             "prediction_probs": [str(prob) for prob in node["prediction_probs"]],
-            "isLeafNode": node["isLeafNode"]
+            "isLeafNode": True if node["isLeafNode"] else False
         }
         for node in tree
     ]
@@ -75,56 +80,56 @@ def zkTreeTraversal(tree, X_test, dir_path=''):
 
 
 # if __name__ == "__main__":
-    # tree = [
-    #     {
-    #         "feature_idx": 1,
-    #         "feature_val": 500,
-    #         "prediction_probs": [54, 23, 10],
-    #         "isLeafNode": False
-    #     },
-    #     {
-    #         "feature_idx": 1,
-    #         "feature_val": 500,
-    #         "prediction_probs": [54, 23, 10],
-    #         "isLeafNode": True
-    #     },
-    #     {
-    #         "feature_idx": 1,
-    #         "feature_val": 500,
-    #         "prediction_probs": [54, 23, 10],
-    #         "isLeafNode": False
-    #     },
-    #     {
-    #         "feature_idx": 0,
-    #         "feature_val": 0,
-    #         "prediction_probs": [0, 0, 0],
-    #         "isLeafNode": True
-    #     },
-    #     {
-    #         "feature_idx": 0,
-    #         "feature_val": 0,
-    #         "prediction_probs": [0, 0, 0],
-    #         "isLeafNode": True
-    #     },
-    #     {
-    #         "feature_idx": 1,
-    #         "feature_val": 500,
-    #         "prediction_probs": [54, 23, 10],
-    #         "isLeafNode": True
-    #     },
-    #     {
-    #         "feature_idx": 1,
-    #         "feature_val": 500,
-    #         "prediction_probs": [54, 23, 10],
-    #         "isLeafNode": True
-    #     }
-    # ]
+#     tree = [
+#         {
+#             "feature_idx": 1,
+#             "feature_val": 500,
+#             "prediction_probs": [54, 23, 10],
+#             "isLeafNode": False
+#         },
+#         {
+#             "feature_idx": 1,
+#             "feature_val": 500,
+#             "prediction_probs": [54, 23, 10],
+#             "isLeafNode": True
+#         },
+#         {
+#             "feature_idx": 1,
+#             "feature_val": 500,
+#             "prediction_probs": [54, 23, 10],
+#             "isLeafNode": False
+#         },
+#         {
+#             "feature_idx": 0,
+#             "feature_val": 0,
+#             "prediction_probs": [0, 0, 0],
+#             "isLeafNode": True
+#         },
+#         {
+#             "feature_idx": 0,
+#             "feature_val": 0,
+#             "prediction_probs": [0, 0, 0],
+#             "isLeafNode": True
+#         },
+#         {
+#             "feature_idx": 1,
+#             "feature_val": 500,
+#             "prediction_probs": [54, 23, 10],
+#             "isLeafNode": True
+#         },
+#         {
+#             "feature_idx": 1,
+#             "feature_val": 500,
+#             "prediction_probs": [54, 23, 10],
+#             "isLeafNode": True
+#         }
+#     ]
 
-    # X_test = [1, 9, 10, 4]
+#     X_test = [1, 9, 10, 4]
     
 #     numClasses = 3
 #     num_features = 4
-#     proof, output = zkTreeTraversal(tree, len(tree), numClasses, num_features, X_test)
+#     proof, output = zkTreeTraversal(tree, X_test)
 #     # print(proof)
 #     print("OUTPUT FROM PYTHON: ", output)
     

@@ -32,6 +32,7 @@ try:
     from treeToArray import treeToArray
 
     from tree_traversal import zkTreeTraversal
+    from argmax import zkArgmax
     from proof_composition import aggregate_proofs
 
 except Exception as e:
@@ -59,8 +60,9 @@ class DecisionTree:
 
     def _run_inference(self, treeArr, X_test):
         start_time = time.time()
-        zkTreeTraversalProof, TreeTraversalWitness = zkTreeTraversal(treeArr, X_test)
-        zkArgmaxProof, prediction = zkArgmax(TreeTraversalWitness)
+        dir_path = os.getcwd() + '/../../'
+        zkTreeTraversalProof, TreeTraversalWitness = zkTreeTraversal(treeArr, X_test, dir_path)
+        zkArgmaxProof, prediction = zkArgmax(TreeTraversalWitness, dir_path)
 
         paths = ['../../zkTreeTraversal', '../../zkArgmax']
         final_proof = aggregate_proofs(paths, dir_path)

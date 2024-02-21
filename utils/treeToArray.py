@@ -16,7 +16,7 @@ def treeToArray(node,arraySize):
           'feature_idx': int(currentNode.feature_idx),
           'feature_val': int(currentNode.feature_val*100000000),
           'prediction_probs': [int(probs*100) for probs in currentNode.prediction_probs],
-          'isLeafNode': int(bool(currentNode.left is None and currentNode.right is None))
+          'isLeafNode': bool(currentNode.left is None and currentNode.right is None)
       }
       if currentNode.left:
                 queue.append((currentNode.left,  2 * index +  1))

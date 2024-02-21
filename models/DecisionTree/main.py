@@ -4,7 +4,11 @@ from collections import Counter
 from collections import deque
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
+import sys
 
+sys.path.append('../../utils')
+
+from clean import clean_dirs
 
 class TreeNode():
     def __init__(self, data, feature_idx, feature_val, prediction_probs, information_gain) -> None:
@@ -187,6 +191,7 @@ if __name__ == "__main__":
 
     iris = datasets.load_iris()
 
+    clean_dirs()
     X = np.array(iris.data)
     Y = np.array(iris.target)
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size = 0.25, random_state=0)
