@@ -68,7 +68,7 @@ class DecisionTree:
         final_proof = aggregate_proofs(paths, dir_path)
 
         end_time = time.time()
-        _setExecutionTime(end_time - start_time)
+        self._setExecutionTime(end_time - start_time)
 
         return prediction
 
