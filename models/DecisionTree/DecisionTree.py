@@ -70,14 +70,30 @@ class DecisionTree:
         end_time = time.time()
         self._setExecutionTime(end_time - start_time)
 
-        return prediction
+        return prediction,final_proof
 
+    def verify(self):
+        dir_path = os.getcwd()
+        print("\nFINAL CLASS: ", dir_path)
+        result = subprocess.run(["zokrates", "verify", "-j", f"{dir_path}/ProofComposition/proof.json", "-v", f"{dir_path}/ProofComposition/verification.key"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        output_lines = result.stdout.split('\n')
+        
+        verification_status = next((line for line in output_lines if "PASSED" in line),"FAILED")
+        return {"verification_status": verification_status}
+    
     def main(self):
         clean_dirs()
         treeArr = self._preprocess()
-        prediction = self._run_inference(treeArr, self.inference_point)
+        prediction,final_proof = self._run_inference(treeArr, self.inference_point)
+        # dir_path = os.getcwd()
+        verification_status = self.verify()
+        
         print("\nFINAL CLASS: ", prediction)
         print("\nEXECUTION TIME: ", self.getExecutionTime())
+        # print("\nFINAL CLASS: ", dir_path)
+        print("\nProof: ", final_proof)
+        print(verification_status)
+    
 
 
 
