@@ -187,10 +187,9 @@ class DecisionTreeTrain():
 
 
 
-if __name__ == "__main__":
+def run_dt(inputs):
 
     iris = datasets.load_iris()
-
     clean_dirs()
     X = np.array(iris.data)
     Y = np.array(iris.target)
@@ -199,8 +198,6 @@ if __name__ == "__main__":
     my_tree = DecisionTreeTrain(max_depth=4, min_samples_leaf=1)
     my_tree.train(X_train, Y_train)
 
-    dt = DecisionTree(my_tree.tree, X_test[0])
-    # print(dir(dt))
-    dt.main()
-
-
+    dt = DecisionTree(my_tree.tree, inputs)
+    proof, prediction  = dt.main()
+    return proof, prediction
