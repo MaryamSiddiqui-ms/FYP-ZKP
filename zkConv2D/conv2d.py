@@ -1,4 +1,10 @@
 import numpy as np
+import tensorflow as tf
+import json
+import subprocess
+import sys
+
+
 
 def summation(arr):
     tmp = arr.reshape(-1)
@@ -7,6 +13,21 @@ def summation(arr):
         sum += i
         
     return sum
+
+def extract_filter_and_bias(weights_dict, key):
+    filters = weights_dict[key][0]
+    bias = weights_dict[key][1]
+
+    if isinstance(filters, list):
+        filters = np.array(filters)
+
+    if isinstance(bias, list):
+        bias = np.array(bias)
+
+    size = len(filters[0,0,0])
+    filters = np.array([filters[:, :, :, curr] for curr in range(size)])
+
+    return (filters, bias)
 
 def conv2d(input, filters, bias, num_filters):
     input_height, input_width, _ = input.shape
@@ -20,7 +41,6 @@ def conv2d(input, filters, bias, num_filters):
     for k in range(num_filters):
         for i in range(output_height):
             for j in range(output_width):
-                print((input[i:i+filter_height, j:j+filter_width] * filters[k]).shape)
                 output[i, j, k] = summation(input[i:i+filter_height, j:j+filter_width] * filters[k]) + bias[k]
 
     return output
@@ -28,84 +48,34 @@ def conv2d(input, filters, bias, num_filters):
 
 
 def main():
-    input = np.array([
-        [5, 3, 4, 1, 2],
-        [5, 3, 4, 1, 2],
-        [5, 3, 4, 1, 2],
-        [5, 3, 4, 1, 2],
-        [5, 3, 4, 1, 2],
-    ])
+    (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
     
-   
-    input = input.reshape(5,5,1)
+    with open('weights_4.json', 'r') as json_file:
+        weights_dict = json.load(json_file)
+
+    (filters_1, bias_1) = extract_filter_and_bias(weights_dict, "conv2d_19")
+
+    inputs = x_test[20]
+    inputs = np.array(inputs)
+    inputs = inputs.reshape(28,28,1)
     
-    filters = np.array([
-            [[[1], [0], [-1]],
-            [[1], [0], [-1]],
-            [[1], [0], [-1]]],
-            
-            
-            [[[1], [0], [-1]],
-            [[1], [0], [-1]],
-            [[1], [0], [-1]]],
-            
-            
-            [[[1], [0], [-1]],
-            [[1], [0], [-1]],
-            [[1], [0], [-1]]],
-            
-            
-            [[[1], [0], [-1]],
-            [[1], [0], [-1]],
-            [[1], [0], [-1]]],
-            
-            
-            [[[1], [0], [-1]],
-            [[1], [0], [-1]],
-            [[1], [0], [-1]]],
-            
-            
-            [[[1], [0], [-1]],
-            [[1], [0], [-1]],
-            [[1], [0], [-1]]],
-            
-            
-            [[[1], [0], [-1]],
-            [[1], [0], [-1]],
-            [[1], [0], [-1]]],
-            
-            
-            [[[1], [0], [-1]],
-            [[1], [0], [-1]],
-            [[1], [0], [-1]]],
-            
-            
-            [[[1], [0], [-1]],
-            [[1], [0], [-1]],
-            [[1], [0], [-1]]],
-            
-            
-            [[[1], [0], [-1]],
-            [[1], [0], [-1]],
-            [[1], [0], [-1]]]
-    ])
-    bias = np.array([
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-    ])
+    out = conv2d(inputs, filters_1, bias_1, filters_1.shape[0])
     
-    num_filters = 10
+    data = [filters_1.tolist(), bias_1.tolist(), inputs.tolist(), out.tolist()]
     
-    
-    out = conv2d(input, filters, bias, num_filters)
+    with open('input.json', 'w') as f:
+        json.dump(data, f)
+
+    with open('size.zok', 'w') as f:
+        f.write('const u32 input_size = {};\n'.format(inputs.shape[0]))
+        f.write('const u32 filter_size = {};\n'.format(filters_1[0].shape[0]))
+        f.write('const u32 num_filters = {};\n'.format(filters_1.shape[0]))
+        f.write('const u32 channels = {};\n'.format(inputs.shape[2]))
+                
+    subprocess.run(["zokrates", "compile", "-i", "conv2d.zok", "--curve", "bls12_377"])
+    subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
+    subprocess.run(["powershell.exe", "Get-Content input.json |", "zokrates", "compute-witness", "--abi", "--stdin"], stdout=sys.stdout)
+    subprocess.run(["zokrates", "generate-proof", "--proving-scheme", "gm17"])
     
 if __name__ == "__main__":
     main()
