@@ -1,0 +1,34 @@
+from "./size.zok" import size;
+
+/*
+formula: 1+normalization_constant+ ([nonneg_coversion_constant * normalization_constant]/2)
+example: 1 + 10 + ([10 * 10] / 2) = 61
+normalization_constant: constant multiplied by floating point to convert them to integers
+nonneg_conversion_constant = constant added to numbers to convert -ve to +ve and used as a threshold for +ve and -ve
+*/
+
+def summation<N>(u64[N] arr) -> u64 {
+    u64 mut sum = 0;
+    for u32 i in 0..N{
+        sum = sum + arr[i];
+    }
+
+    return sum;
+}
+
+def nonNeg<N>(u64[N] res, u64 a) -> bool{
+    bool mut b = true;
+    for u32 i in 0..N{
+        b = if res[i] < a { false } else { if b==false {false} else {true}};
+    }
+
+    return b;
+}
+
+def main(private u64[size] val, u64 threshold, u64 hp) -> u64{
+    bool n = nonNeg(val,threshold);
+    assert(n == true);
+    u64 s = summation(val);
+    assert(s == hp);
+    return 1;
+}
