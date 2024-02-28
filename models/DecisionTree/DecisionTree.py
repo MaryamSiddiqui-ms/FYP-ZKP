@@ -4,10 +4,6 @@ import os
 import subprocess
 import time
 import numpy as np
-import uvicorn
-from fastapi import FastAPI, Request, File, UploadFile
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 
 current_file_path = os.path.abspath(__file__)
 project_path = os.path.dirname(os.path.dirname(current_file_path))
