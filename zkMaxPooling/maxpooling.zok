@@ -1,0 +1,22 @@
+// from "./size1.zok" import size1;
+// from "./size2.zok" import size2;
+
+def maxInArray<N1,N2>(u64[N1] res1, u64[N2] res2, u32 filter) -> bool{
+    bool mut result = true;
+    u32 mut  j =0;
+    u64 mut max = 0;
+    for u32 i in 0..N1-1{
+        max = if res1[i] > max {res1[i]} else {max};
+        result = if i%filter == (filter-1) {if res2[j] == max {true} else {false}}else{if result==false {false} else {true}};
+        max = if i%filter == (filter-1) {0} else {max};
+        j = if i%filter >= (filter-1) {if j+1 > N2-1 {j} else {j+1}} else {j};
+    }
+
+    return result;
+}
+
+def main(private u64[8] val1, u64[2] val2, u32 filter) -> u64{
+    bool mut ver = maxInArray(val1,val2,filter);
+    assert(ver == true);
+    return 1;
+}

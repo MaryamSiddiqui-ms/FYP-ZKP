@@ -56,24 +56,35 @@ class DecisionTree:
 
     def _run_inference(self, treeArr, X_test):
         start_time = time.time()
-        dir_path = os.getcwd() + '/../../'
+        dir_path = os.getcwd()
         zkTreeTraversalProof, TreeTraversalWitness = zkTreeTraversal(treeArr, X_test, dir_path)
         zkArgmaxProof, prediction = zkArgmax(TreeTraversalWitness, dir_path)
 
-        paths = ['../../zkTreeTraversal', '../../zkArgmax']
+        paths = ['../zkTreeTraversal', '../zkArgmax']
         final_proof = aggregate_proofs(paths, dir_path)
 
         end_time = time.time()
-        _setExecutionTime(end_time - start_time)
+        self._setExecutionTime(end_time - start_time)
 
-        return prediction
+        return prediction,final_proof
 
+    def verify_dt(self):
+        dir_path = os.getcwd()
+        result = subprocess.run(["zokrates", "verify", "-j", f"{dir_path}/ProofComposition/proof.json", "-v", f"{dir_path}/ProofComposition/verification.key"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        output_lines = result.stdout.split('\n')
+        
+        verification_status = next((line for line in output_lines if "PASSED" in line),"FAILED")
+        return {"verification_status": verification_status}
+    
     def main(self):
         clean_dirs()
         treeArr = self._preprocess()
-        prediction = self._run_inference(treeArr, self.inference_point)
+        prediction,final_proof = self._run_inference(treeArr, self.inference_point)
+        dir_path = os.getcwd()
+        
         print("\nFINAL CLASS: ", prediction)
         print("\nEXECUTION TIME: ", self.getExecutionTime())
+        return final_proof, prediction
 
 
 
