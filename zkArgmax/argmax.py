@@ -3,7 +3,7 @@ import json
 import os
 
 def getArguments():
-    with open('argmax.json', 'r') as f:
+    with open('input.json', 'r') as f:
         data = json.load(f)
 
     data = [int(x) for x in data]
@@ -27,7 +27,7 @@ def zkArgmax(output_probs, dir_path):
     curr_path = dir_path + '/zkArgmax'
     os.chdir(curr_path)
 
-    with open('argmax.json', 'w') as f:
+    with open('input.json', 'w') as f:
         json.dump(output_probs, f)
     
     arguments = getArguments()
