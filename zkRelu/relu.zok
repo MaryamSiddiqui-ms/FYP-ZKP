@@ -1,0 +1,16 @@
+from "./size.zok" import size;
+
+def zkRelu<N>(u64[N] mut res, u64 mut a) -> bool{
+    bool mut b = true;
+    for u32 i in 0..N-1{
+        b = if res[i] < a { false } else { if b==false {false} else {true}};
+    }
+
+    return b;
+}
+
+def main(private u64[size] val, u64 threshold) -> u64{
+    bool ver = zkRelu(val, threshold);
+    assert(ver == true);
+    return 1;
+}
