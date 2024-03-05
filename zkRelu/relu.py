@@ -2,9 +2,14 @@ import subprocess
 import json
 import os
 import numpy as np
+import math
 import sys
 
-def zkRelu(arguments , dir_path=''):
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+
+from utils.removeNegatives import removeNegatives
+
+def zkRelu(arguments = [[[1, 0.2, 0.03], [4, 0.5, 0.006]], [[7, 8, 9], [10, 11, 12]]] , dir_path=''):
 
     witness = []
     labels = []
@@ -12,15 +17,12 @@ def zkRelu(arguments , dir_path=''):
 
     print(arguments)
 
-    if isinstance(arguments[0], list):
-        modified_arr =  [item for sublist in arguments for item in sublist]
-    else:
-        modified_arr = arguments
-    positive_min = abs(min(modified_arr))
-    mod_arr = [(item + positive_min) for item in modified_arr]
-    str_mod_arr = [str(item) for item in mod_arr]
-    print(str_mod_arr)
 
+
+    modified_arr, positive_min = removeNegatives(arguments)
+    mod_arr = [int(item*math.pow(10,8)) for item in modified_arr]
+    str_mod_arr = [str(item) for item in mod_arr]
+    sys.path.pop()
 
     curr_path = dir_path + '/zkRelu'
     os.chdir(curr_path)
@@ -30,7 +32,7 @@ def zkRelu(arguments , dir_path=''):
         f.write('const u32 size = {};\n'.format(int(len(modified_arr))))
 
     with open('input.json', 'w') as f:
-        json.dump([str_mod_arr,str(positive_min)], f)
+        json.dump([str_mod_arr,str(int(positive_min))], f)
 
     subprocess.run(["zokrates", "compile", "-i", "relu.zok", "--curve", "bls12_377"])
     subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])

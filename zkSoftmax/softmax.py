@@ -3,8 +3,13 @@ import json
 import os
 import numpy as np
 import sys
+import math
 
-def zkRelu(arguments , dir_path=''):
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+
+from utils.removeNegatives import removeNegatives
+
+def zkSoftmax(arguments=[0.65900114,0.24243297,0.09856589] , dir_path=''):
 
     witness = []
     labels = []
@@ -12,27 +17,24 @@ def zkRelu(arguments , dir_path=''):
 
     print(arguments)
 
-    if isinstance(arguments[0], list):
-        modified_arr =  [item for sublist in arguments for item in sublist]
-    else:
-        modified_arr = arguments
-    positive_min = abs(min(modified_arr))
-    mod_arr = [(item + positive_min) for item in modified_arr]
-    str_mod_arr = [str(item) for item in mod_arr]
-    print(str_mod_arr)
+    mod_arr = [int(math.pow(10,8)*item) for item in arguments]
+    modified_arr, positive_min = removeNegatives(mod_arr)
+    # mod_arr = [int(item*math.pow(10,8)) for item in modified_arr]
+    str_mod_arr = [str(item) for item in modified_arr]
+    sys.path.pop()
 
-
-    curr_path = dir_path + '/zkRelu'
+    curr_path = dir_path + '/zkSoftmax'
     os.chdir(curr_path)
 
+    hp = ((positive_min * math.pow(10,8))/2) - positive_min
 
     with open('size.zok', 'w') as f:
         f.write('const u32 size = {};\n'.format(int(len(modified_arr))))
 
     with open('input.json', 'w') as f:
-        json.dump([str_mod_arr,str(positive_min)], f)
+        json.dump([str_mod_arr,str(int(positive_min)),str(int(math.pow(10,8)))], f)
 
-    subprocess.run(["zokrates", "compile", "-i", "relu.zok", "--curve", "bls12_377"])
+    subprocess.run(["zokrates", "compile", "-i", "softmax.zok", "--curve", "bls12_377"])
     subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
     subprocess.run(["powershell.exe", "Get-Content input.json |", "zokrates", "compute-witness", "--abi", "--stdin"], stdout=sys.stdout)
         
