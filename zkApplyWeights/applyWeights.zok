@@ -1,4 +1,4 @@
-def main(private field[2][3] matrix1, private field[3][2] matrix2, private field[2] bias,public field[2][2]py_result) -> field[2][2] {
+def main(private field[2][3] matrix1, private field[3][2] matrix2, private field[2] bias,public field[2][2]py_result){
     // Initialize the result matrix as a  2D array of field elements
     field[2][2] mut result = [[0,  0], [0,  0]];
     for u32 i in  0..2 {
@@ -13,5 +13,5 @@ def main(private field[2][3] matrix1, private field[3][2] matrix2, private field
     }
     assert (py_result==result) ;
   
-    return result;
+    return;
 }
