@@ -7,10 +7,10 @@ normalization_constant: constant multiplied by floating point to convert them to
 nonneg_conversion_constant = constant added to numbers to convert -ve to +ve and used as a threshold for +ve and -ve
 */
 
-def summation<N>(u64[N] arr) -> u64 {
+def summation<N>(u64[N] arr,u64 threshold) -> u64 {
     u64 mut sum = 0;
     for u32 i in 0..N{
-        sum = sum + arr[i];
+        sum = sum + (arr[i] - threshold);
     }
 
     return sum;
@@ -28,7 +28,7 @@ def nonNeg<N>(u64[N] res, u64 a) -> bool{
 def main(private u64[size] val, u64 threshold, u64 hp) -> u64{
     bool n = nonNeg(val,threshold);
     assert(n == true);
-    u64 s = summation(val);
+    u64 s = summation(val,threshold);
     assert(s == hp);
     return 1;
 }
