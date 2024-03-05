@@ -1,0 +1,43 @@
+from "./size.zok" import num_filters;
+from "./size.zok" import filter_size;
+from "./size.zok" import input_size;
+from "./size.zok" import channels;
+
+const u32 output_size = input_size - filter_size + 1;
+
+def conv2d(u64[input_size][input_size][channels] input, u64[num_filters][filter_size][filter_size][channels] filters, u64[num_filters] bias) -> u64[output_size][output_size][num_filters] {
+    u64[output_size][output_size][num_filters] mut output = [[[0;num_filters]; output_size]; output_size];
+
+    for u32 k in 0..num_filters {
+        for u32 i in 0..output_size {
+            for u32 j in 0..output_size {
+                
+                u64 mut sum = 0;
+                for u32 x in 0..filter_size {
+                    for u32 y in 0..filter_size {
+                        for u32 z in 0..channels {
+                            sum = sum + input[x + i][y + j][z] * filters[k][x][y][z];
+                        }
+                    }
+                }
+                
+                output[i][j][k] = sum + bias[k];
+            }
+        }
+    }
+    return output;
+}
+
+def main(private u64[num_filters][filter_size][filter_size][channels] filters, private u64[num_filters] bias, public u64[input_size][input_size][channels] inputs, public u64[output_size][output_size][num_filters] computed) {
+    assert(output_size == input_size - filter_size + 1);
+    u64[output_size][output_size][num_filters] mut expected = conv2d(inputs, filters, bias);
+    for u32 i in 0..output_size {
+        for u32 j in 0..output_size {
+            for u32 k in 0..num_filters {
+                assert(expected[i][j][k] == computed[i][j][k]);
+            }
+        } 
+    }
+
+    return;
+}   
