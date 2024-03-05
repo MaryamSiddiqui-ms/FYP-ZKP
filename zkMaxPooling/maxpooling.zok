@@ -1,5 +1,5 @@
-from "./size1.zok" import size1;
-from "./size2.zok" import size2;
+from "./size.zok" import size1,size2;
+
 
 def maxInArray<N1,N2>(u64[N1] res1, u64[N2] res2, u32 filter) -> bool{
     bool mut result = true;

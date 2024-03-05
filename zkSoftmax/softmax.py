@@ -9,7 +9,11 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 from utils.removeNegatives import removeNegatives
 
-def zkSoftmax(arguments=[0.65900114,0.24243297,0.09856589] , dir_path=''):
+def softmax(x):
+  exp_x = np.exp(x - np.max(x))
+  return exp_x / np.sum(exp_x)
+
+def zkSoftmax(arguments , dir_path=''):
 
     witness = []
     labels = []
@@ -17,7 +21,10 @@ def zkSoftmax(arguments=[0.65900114,0.24243297,0.09856589] , dir_path=''):
 
     print(arguments)
 
-    mod_arr = [int(math.pow(10,8)*item) for item in arguments]
+    arr = zkSoftmax(arguments)
+
+
+    mod_arr = [int(math.pow(10,8)*item) for item in arr]
     modified_arr, positive_min = removeNegatives(mod_arr)
     # mod_arr = [int(item*math.pow(10,8)) for item in modified_arr]
     str_mod_arr = [str(item) for item in modified_arr]
@@ -45,6 +52,6 @@ def zkSoftmax(arguments=[0.65900114,0.24243297,0.09856589] , dir_path=''):
 
     os.chdir(curr_path)
 
-    return proof, modified_arr
+    return proof, arr
 
 

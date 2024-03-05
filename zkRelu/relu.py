@@ -9,7 +9,11 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 from utils.removeNegatives import removeNegatives
 
-def zkRelu(arguments = [[[1, 0.2, 0.03], [4, 0.5, 0.006]], [[7, 8, 9], [10, 11, 12]]] , dir_path=''):
+
+def relu(arr):
+  return np.maximum(0, arr)
+
+def zkRelu(arguments , dir_path=''):
 
     witness = []
     labels = []
@@ -17,9 +21,10 @@ def zkRelu(arguments = [[[1, 0.2, 0.03], [4, 0.5, 0.006]], [[7, 8, 9], [10, 11, 
 
     print(arguments)
 
+    arr = relu(arguments)
 
 
-    modified_arr, positive_min = removeNegatives(arguments)
+    modified_arr, positive_min = removeNegatives(arr)
     mod_arr = [int(item*math.pow(10,8)) for item in modified_arr]
     str_mod_arr = [str(item) for item in mod_arr]
     sys.path.pop()
@@ -45,6 +50,6 @@ def zkRelu(arguments = [[[1, 0.2, 0.03], [4, 0.5, 0.006]], [[7, 8, 9], [10, 11, 
 
     os.chdir(curr_path)
 
-    return proof, modified_arr
+    return proof, arr
 
 
