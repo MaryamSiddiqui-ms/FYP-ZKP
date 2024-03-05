@@ -23,6 +23,13 @@ try:
     sys.path.append('./ProofComposition')
     sys.path.append('./utils')
     sys.path.append('./models/DecisionTree')
+    sys.path.append('../../zkConv2D')
+    sys.path.append('../../zkRelu')
+    sys.path.append('../../zkSoftmax')
+    sys.path.append('../../zkMaxPooling')
+    sys.path.append('../../zkArgmax')
+    sys.path.append('../../zkApplyWeights')
+    sys.path.append('./models/CNN')
 
     from minMaxNormalizationAndInteger import minMaxNormalizationAndInteger
     from clean import clean_dirs

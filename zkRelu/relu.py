@@ -25,7 +25,7 @@ def zkRelu(arguments , dir_path=''):
 
 
     modified_arr, positive_min = removeNegatives(arr)
-    mod_arr = [int(item*math.pow(10,8)) for item in modified_arr]
+    mod_arr = [item for item in modified_arr]
     str_mod_arr = [str(item) for item in mod_arr]
     sys.path.pop()
 

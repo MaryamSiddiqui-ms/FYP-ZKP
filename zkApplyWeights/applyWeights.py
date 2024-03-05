@@ -30,10 +30,15 @@ def zkApplyWeights(matrix1,matrix2,bias_b):
     result = dot_product + bias_b
     print(result)
     
-    matrix_1 = list(map(lambda row: [str(element) for element in row], matrix1))
-    matrix_2 = list(map(lambda row: [str(element) for element in row], matrix2))
-    bias = bias_b[0].astype(str).tolist()
-    result = list(map(lambda row: [str(element) for element in row], result))
+    matrix_1 = list(map(lambda row: [str(int(element*math.pow(10,8))) for element in row], matrix1))
+    matrix_2 = list(map(lambda row: [str(int(element*math.pow(10,8))) for element in row], matrix2))
+
+    # bias = bias_b[0].astype(str).tolist()
+
+    bias = [str(int(item * math.pow(10,8))) for item in bias_b[0]]  # Convert the first element of bias_b to string and store in a list
+
+
+    # result = list(map(lambda row: [str(element*math.pow(10,8)) for element in row], result))
     
     with open('input.json', 'w') as f:
         json.dump([matrix_1,matrix_2,bias], f)

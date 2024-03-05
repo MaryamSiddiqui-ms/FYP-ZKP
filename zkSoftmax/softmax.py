@@ -24,7 +24,7 @@ def zkSoftmax(arguments , dir_path=''):
     arr = zkSoftmax(arguments)
 
 
-    mod_arr = [int(math.pow(10,8)*item) for item in arr]
+    mod_arr = [item for item in arr]
     modified_arr, positive_min = removeNegatives(mod_arr)
     # mod_arr = [int(item*math.pow(10,8)) for item in modified_arr]
     str_mod_arr = [str(item) for item in modified_arr]

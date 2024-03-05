@@ -2,6 +2,13 @@ import sys
 import json
 import numpy as np
 import math
+import os
+
+
+current_file_path = os.path.abspath(__file__)
+project_path = os.path.dirname(os.path.dirname(os.path.dirname(current_file_path)))
+current_pythonpath = os.environ.get('PYTHONPATH', '')
+os.environ['PYTHONPATH'] = f"{project_path};{current_pythonpath}"
 
 try: 
     sys.path.append('../../zkConv2D')
@@ -17,23 +24,23 @@ try:
     # from clean import clean_dirs
     # from extractor import extract_filter_and_bias
 
-    from utils.clean import clean_dirs
-    from utils.extractor import extract_filter_and_bias
+    # from utils.clean import clean_dirs
+    from extractor import extract_filter_and_bias
 
-    # from conv2d import zkConv2D
+    from conv2d import zkConv2D
+    from relu import zkRelu
+    from softmax import zkSoftmax
+    # from flatten import zkFlatten
+    from apply_weights import zkApplyWeights
+    from maxpooling import zkMaxPooling
+    from argmax import zkArgmax
+
     # from relu import zkRelu
     # from softmax import zkSoftmax
-    # from flatten import zkFlatten
-    # from apply_weights import zkApplyWeights
-    # from maxpool2d import zkMaxPooling
+    # from maxpooling import zkMaxPooling
     # from argmax import zkArgmax
-
-    from zkRelu.relu import zkRelu
-    from zkSoftmax.softmax import zkSoftmax
-    from zkMaxPooling.maxpooling import zkMaxPooling
-    from zkArgmax.argmax import zkArgmax
-    from zkConv2D.conv2d import zkConv2D
-    from zkApplyWeights.applyWeights import zkApplyWeights
+    # from conv2d import zkConv2D
+    # from applyWeights import zkApplyWeights
 
 except Exception as e:
     print(e)
@@ -70,7 +77,10 @@ class CNN:
         
         proofs = []
         
-        output_1, proof1 = zkConv2D(filters_1, bias_1, self.inputs)
+        dir_path = os.getcwd()
+        print(dir_path)
+
+        output_1, proof1 = zkConv2D(filters_1, bias_1, self.inputs, project_path)
         activated_1, proof2 = zkRelu(output_1)
         pooled_1, proof3 = zkMaxPooling(activated_1, 2)
 

@@ -3,6 +3,8 @@ import tensorflow as tf
 import json
 import subprocess
 import sys
+import os
+import math
 
 sys.path.append('../utils')
 
@@ -41,8 +43,20 @@ def zkConv2D(filter, bias, input, dir_path=''):
     curr_path = dir_path + '/zkConv2D'
     os.chdir(curr_path)
     
-    out = conv2d(input, filter, bias, filter.shape[0])
-    data = [filters.tolist(), bias.tolist(), input.tolist(), out.tolist()]
+    filter_nor = filter * math.pow(10,8)
+    filter_int = filter_nor.astype(int)
+    filter_str = filter_int.astype(str)
+
+    bias_nor = bias * math.pow(10,8)
+    bias_int = bias.astype(int)
+    bias_str = bias_int.astype(str)
+
+    input_nor = input * math.pow(10,8)
+    input_int = input_nor.astype(int)
+    input_str = input_int.astype(str)
+
+    out = conv2d(input_int, filter_int, bias_int, filter_int.shape[0])
+    data = [filter_str.tolist(), bias_str.tolist(), input_str.tolist(), out.tolist()]
     
     with open('input.json', 'w') as f:
         json.dump(data, f)

@@ -51,11 +51,11 @@ def zkMaxPooling(arguments , dir_path=''):
     # print(mod_pooled)
 
     # modified_act_arr, positive_min = removeNegatives(mod_activated)
-    mod_act_arr = [int(item*math.pow(10,8)) for item in mod_activated]
+    mod_act_arr = [(item) for item in mod_activated]
     str_mod_act_arr = [str(item) for item in mod_act_arr]
 
     # modified_pool_arr, positive_min = removeNegatives(mod_pooled)
-    mod_pool_arr = [int(item*math.pow(10,8)) for item in mod_pooled]
+    mod_pool_arr = [(item) for item in mod_pooled]
     str_mod_pool_arr = [str(item) for item in mod_pool_arr]
     sys.path.pop()
 
