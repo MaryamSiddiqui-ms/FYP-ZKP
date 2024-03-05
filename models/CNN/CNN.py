@@ -1,6 +1,7 @@
 import sys
 import json
 import numpy as np
+import math
 
 try: 
     sys.path.append('../../zkConv2D')
@@ -23,7 +24,7 @@ try:
     # from relu import zkRelu
     # from softmax import zkSoftmax
     # from flatten import zkFlatten
-    from apply_weights import zkApplyWeights
+    # from apply_weights import zkApplyWeights
     # from maxpool2d import zkMaxPooling
     # from argmax import zkArgmax
 
@@ -32,10 +33,15 @@ try:
     from zkMaxPooling.maxpooling import zkMaxPooling
     from zkArgmax.argmax import zkArgmax
     from zkConv2D.conv2d import zkConv2D
+    from zkApplyWeights.applyWeights import zkApplyWeights
 
 except Exception as e:
     print(e)
     
+
+def convert_to_str(arr):
+    str_arr = np.vectorize(lambda x: str(int(x * math.pow(10, 8))))(arr)
+    return str_arr
 
 class CNN:
     def __init__(self, weights, inputs):
