@@ -66,7 +66,7 @@ class CNN:
         output_3, proof7 = zkConv2D(filters_3, bias_3, pooled_2)
         activated_3, proof8 = zkRelu(output_3)
 
-        flattened_layer, proof9 = zkFlatten(activated_3).reshape(-1, 1)
+        flattened_layer = activated_3.flatten().reshape(-1, 1)
         output_d1, proof10 = zkApplyWeights(dense_1, flattened_layer, bias_d1)
         output_d1.reshape(1,-1)
         activated_d1, proof11 = zkRelu(output_d1)
