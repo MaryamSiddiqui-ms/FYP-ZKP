@@ -3,15 +3,27 @@ import json
 import sys
 import numpy as np
 
-# matrix1 = np.array([["1",  "2",  "3"], ["4",  "5",  "6"]], dtype=int)
-# matrix2 = np.array([["7",  "8"], ["9",  "10"], ["11",  "12"]], dtype=int)
-# bias_b = np.array([["1", "3"]], dtype=int)
+
 # dot_product = np.dot(matrix1, matrix2)
 # result = dot_product + bias_b
 # print(result)
 
+def get_matrix_dimensions(matrix):
+    rows = len(matrix)
+    columns = len(matrix[0]) if rows > 0 else 0
+    return rows, columns
 def zkApplyWeights(matrix1,matrix2,bias_b):
+
+    rows1, columns1 = get_matrix_dimensions(matrix1)
+    rows2, columns2 = get_matrix_dimensions(matrix2)
+
     
+    with open('size.zok', 'w') as f:
+        f.write('const u32 M1 = {};\n'.format(int(rows1)))
+        f.write('const u32 N1 = {};\n'.format(int(columns1)))
+        f.write('const u32 M2 = {};\n'.format(int(rows2)))
+        f.write('const u32 N2 = {};\n'.format(int(columns2)))
+        
     dot_product = np.dot(matrix1, matrix2)
     result = dot_product + bias_b
     print(result)
@@ -35,3 +47,8 @@ def zkApplyWeights(matrix1,matrix2,bias_b):
     
 
 # subprocess.run(["zokrates", "verify"])
+matrix1 = np.array([["1",  "2",  "3"], ["4",  "5",  "6"]], dtype=int)
+matrix2 = np.array([["7",  "8"], ["9",  "10"], ["11",  "12"]], dtype=int)
+bias_b = np.array([["1", "3"]], dtype=int)
+
+zkApplyWeights(matrix1,matrix2,bias_b)
