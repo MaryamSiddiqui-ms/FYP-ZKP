@@ -1,10 +1,19 @@
-def main(private field[2][3] matrix1, private field[3][2] matrix2, private field[2] bias,public field[2][2]py_result) -> field[2][2] {
+from "./size.zok" import M1; 
+from "./size.zok" import M2;
+from "./size.zok" import N1;
+from "./size.zok" import N2;
+
+
+
+def main(private field[M1][N1] matrix1, private field[M2][N2] matrix2, private field[2] bias,public field[2][2]py_result){
     // Initialize the result matrix as a  2D array of field elements
-    field[2][2] mut result = [[0,  0], [0,  0]];
-    for u32 i in  0..2 {
-        for u32 j in  0..2 {
+    
+    field [M1][N2] mut result = [[0; N2]; M1];
+
+    for u32 i in  0..M1 {
+        for u32 j in  0..N2 {
             field mut temp =  0; // Ensure temp is of type field
-            for u32 k in  0..3 {
+            for u32 k in  0..N1 {
                 // Perform multiplication within the field
                 temp = temp + (matrix1[i][k] * matrix2[k][j]);
             }
@@ -13,5 +22,5 @@ def main(private field[2][3] matrix1, private field[3][2] matrix2, private field
     }
     assert (py_result==result) ;
   
-    return result;
+    return;
 }
