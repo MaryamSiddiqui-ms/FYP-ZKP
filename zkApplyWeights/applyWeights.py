@@ -16,13 +16,15 @@ def zkApplyWeights(matrix1,matrix2,bias_b):
 
     rows1, columns1 = get_matrix_dimensions(matrix1)
     rows2, columns2 = get_matrix_dimensions(matrix2)
-
-    
+    rowsb,columnsb = get_matrix_dimensions(bias_b)
+        
     with open('size.zok', 'w') as f:
         f.write('const u32 M1 = {};\n'.format(int(rows1)))
         f.write('const u32 N1 = {};\n'.format(int(columns1)))
         f.write('const u32 M2 = {};\n'.format(int(rows2)))
         f.write('const u32 N2 = {};\n'.format(int(columns2)))
+        f.write('const u32 br = {};\n'.format(int(rowsb)))
+        f.write('const u32 bc = {};\n'.format(int(columnsb)))
         
     dot_product = np.dot(matrix1, matrix2)
     result = dot_product + bias_b
@@ -31,9 +33,10 @@ def zkApplyWeights(matrix1,matrix2,bias_b):
     matrix_1 = list(map(lambda row: [str(element) for element in row], matrix1))
     matrix_2 = list(map(lambda row: [str(element) for element in row], matrix2))
     bias = bias_b[0].astype(str).tolist()
-    result = list(map(lambda row: [str(element*math.pow(10,8)) for element in row], result))
-
+    result = list(map(lambda row: [str(element) for element in row], result))
     
+    with open('input.json', 'w') as f:
+        json.dump([matrix_1,matrix_2,bias], f)
 
     print("Result of dot product of matrices with bias:")
 
