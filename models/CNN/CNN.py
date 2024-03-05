@@ -66,16 +66,16 @@ class CNN:
         output_3, proof7 = zkConv2D(filters_3, bias_3, pooled_2)
         activated_3, proof8 = zkRelu(output_3)
 
-        flattened_layer, proof9 = zkFlatten(activated_3).reshape(-1, 1)
-        output_d1, proof10 = zkApplyWeights(dense_1, flattened_layer, bias_d1)
+        flattened_layer = activated_3.flatten().reshape(-1, 1)
+        output_d1, proof9 = zkApplyWeights(dense_1, flattened_layer, bias_d1)
         output_d1.reshape(1,-1)
-        activated_d1, proof11 = zkRelu(output_d1)
+        activated_d1, proof10 = zkRelu(output_d1)
 
-        output_d2, proof12 = zkApplyWeights(dense_2, output_d1, bias_d2)
-        activated_d2, proof13 = zkRelu(output_d2)
-        activated_d2, proof14= activated_d2.reshape(-1)
-        final, proof15 = zkSoftmax(activated_d2)
-        prediction, proof16 = zkArgmax(final)
+        output_d2, proof11 = zkApplyWeights(dense_2, output_d1, bias_d2)
+        activated_d2, proof12 = zkRelu(output_d2)
+        activated_d2, proof13= activated_d2.reshape(-1)
+        final, proof14 = zkSoftmax(activated_d2)
+        prediction, proof15 = zkArgmax(final)
 
         # Aggregate proofs
 

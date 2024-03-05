@@ -1,0 +1,7 @@
+from "snark/gm17" import main as verify, Proof, VerificationKey;
+from "./size.zok" import IN_1;
+const u32 IV_1 = IN_1 + 1;
+
+def main(Proof<IN_1> sp1, VerificationKey<IV_1> vk1){
+   assert(verify(sp1, vk1));
+}
