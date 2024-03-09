@@ -13,13 +13,13 @@ from utils.convert_3D_To_1D import convert_3d_to_1d
 def relu(arr):
   return np.maximum(0, arr)
 
-def zkRelu(arguments , dir_path=''):
+def zkRelu(arguments, dir_path=''):
 
     witness = []
     labels = []
     data = []
 
-    print(arguments)
+    # print(arguments)
 
     arr = relu(arguments)
 
