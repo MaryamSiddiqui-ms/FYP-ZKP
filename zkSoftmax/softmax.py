@@ -8,6 +8,7 @@ import math
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 from utils.removeNegatives import removeNegatives
+from utils.convert_3D_To_1D import convert_3d_to_1d
 
 def softmax(x):
   exp_x = np.exp(x - np.max(x))
@@ -23,8 +24,8 @@ def zkSoftmax(arguments , dir_path=''):
 
     arr = zkSoftmax(arguments)
 
-
-    mod_arr = [item for item in arr]
+    mod_arr = convert_3d_to_1d(arr)
+    # mod_arr = [item for item in arr]
     modified_arr, positive_min = removeNegatives(mod_arr)
     # mod_arr = [int(item*math.pow(10,8)) for item in modified_arr]
     str_mod_arr = [str(item) for item in modified_arr]

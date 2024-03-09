@@ -8,7 +8,7 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 from utils.removeNegatives import removeNegatives
-
+from utils.convert_3D_To_1D import convert_3d_to_1d
 
 def relu(arr):
   return np.maximum(0, arr)
@@ -23,8 +23,8 @@ def zkRelu(arguments , dir_path=''):
 
     arr = relu(arguments)
 
-
-    modified_arr, positive_min = removeNegatives(arr)
+    moded_arr = convert_3d_to_1d(arr)
+    modified_arr, positive_min = removeNegatives(moded_arr)
     mod_arr = [item for item in modified_arr]
     str_mod_arr = [str(item) for item in mod_arr]
     sys.path.pop()

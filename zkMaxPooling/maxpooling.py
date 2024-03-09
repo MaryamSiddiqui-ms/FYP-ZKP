@@ -10,6 +10,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 from utils.removeNegatives import removeNegatives
 from utils.activated_mat_to_1d import append_subarrays, convert_to_1d, sub_1d
 from utils.maxpooled_mat_to_1d import convert_pooled_mat_to_1d
+from utils.convert_3D_To_1D import convert_3d_to_1d
 
 def maxPool_2d(mat, pool_size):
     res_height = mat.shape[0] // pool_size
@@ -31,8 +32,8 @@ def zkMaxPooling(arguments , dir_path=''):
     data = []
 
     # print(arguments)
-
-    activated = np.array(arguments)
+    act_arr = convert_3d_to_1d(arguments)
+    activated = np.array(act_arr)
     pool = maxPool_2d(activated,2)
     pooled = np.array(pool)
 
