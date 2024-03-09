@@ -47,7 +47,7 @@ except Exception as e:
     
 
 def convert_to_str(arr):
-    str_arr = np.vectorize(lambda x: str(int(x * math.pow(10, 8))))(arr)
+    str_arr = np.vectorize(lambda x: str(int(x * math.pow(10, 4))))(arr)
     return str_arr
 
 class CNN:
@@ -78,10 +78,9 @@ class CNN:
         proofs = []
         
         dir_path = os.getcwd()
-        print(dir_path)
 
         output_1, proof1 = zkConv2D(filters_1, bias_1, self.inputs, project_path)
-        activated_1, proof2 = zkRelu(output_1)
+        activated_1, proof2 = zkRelu(output_1, project_path)
         pooled_1, proof3 = zkMaxPooling(activated_1, 2)
 
         output_2, proof4 = zkConv2D(filters_2, bias_2, pooled_1)

@@ -13,13 +13,13 @@ from utils.removeNegatives import removeNegatives
 def relu(arr):
   return np.maximum(0, arr)
 
-def zkRelu(arguments , dir_path=''):
+def zkRelu(arguments, dir_path=''):
 
     witness = []
     labels = []
     data = []
 
-    print(arguments)
+    # print(arguments)
 
     arr = relu(arguments)
 
