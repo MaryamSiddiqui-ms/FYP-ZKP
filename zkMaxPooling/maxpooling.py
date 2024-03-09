@@ -25,7 +25,7 @@ def maxPool_2d(mat, pool_size):
 
     return pooled_mat
 
-def zkMaxPooling(arguments , dir_path=''):
+def zkMaxPooling(arguments, dir_path=''):
 
     witness = []
     labels = []
@@ -84,7 +84,7 @@ def zkMaxPooling(arguments , dir_path=''):
         proof = json.load(proof_file)
 
 
-    os.chdir(curr_path)
+    os.chdir(dir_path)
 
     return proof, pool
 

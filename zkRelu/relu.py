@@ -48,7 +48,7 @@ def zkRelu(arguments, dir_path=''):
         proof = json.load(proof_file)
 
 
-    os.chdir(curr_path)
+    os.chdir(dir_path)
 
     return proof, arr
 

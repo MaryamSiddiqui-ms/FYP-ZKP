@@ -81,24 +81,24 @@ class CNN:
 
         output_1, proof1 = zkConv2D(filters_1, bias_1, self.inputs, project_path)
         activated_1, proof2 = zkRelu(output_1, project_path)
-        pooled_1, proof3 = zkMaxPooling(activated_1, 2)
+        pooled_1, proof3 = zkMaxPooling(activated_1, project_path)
 
-        output_2, proof4 = zkConv2D(filters_2, bias_2, pooled_1)
-        activated_2, proof5 = zkRelu(output_2)
-        pooled_2, proof6 = zkMaxPooling(activated_2, 2)
+        output_2, proof4 = zkConv2D(filters_2, bias_2, pooled_1, project_path)
+        activated_2, proof5 = zkRelu(output_2, project_path)
+        pooled_2, proof6 = zkMaxPooling(activated_2, project_path)
 
-        output_3, proof7 = zkConv2D(filters_3, bias_3, pooled_2)
-        activated_3, proof8 = zkRelu(output_3)
+        output_3, proof7 = zkConv2D(filters_3, bias_3, pooled_2, project_path)
+        activated_3, proof8 = zkRelu(output_3, project_path)
 
         flattened_layer = activated_3.flatten().reshape(-1, 1)
-        output_d1, proof9 = zkApplyWeights(dense_1, flattened_layer, bias_d1)
+        output_d1, proof9 = zkApplyWeights(dense_1, flattened_layer, bias_d1, project_path)
         output_d1.reshape(1,-1)
-        activated_d1, proof10 = zkRelu(output_d1)
+        activated_d1, proof10 = zkRelu(output_d1, project_path)
 
-        output_d2, proof11 = zkApplyWeights(dense_2, activated_d1, bias_d2)
-        activated_d2, proof12 = zkRelu(output_d2)
+        output_d2, proof11 = zkApplyWeights(dense_2, activated_d1, bias_d2, project_path)
+        activated_d2, proof12 = zkRelu(output_d2, project_path)
         activated_d2, proof13= activated_d2.reshape(-1)
-        final, proof14 = zkSoftmax(activated_d2)
+        final, proof14 = zkSoftmax(activated_d2, project_path)
         prediction, proof15 = zkArgmax(final)
 
         # Aggregate proofs
