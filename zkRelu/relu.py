@@ -5,10 +5,19 @@ import numpy as np
 import math
 import sys
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+# sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
-from utils.removeNegatives import removeNegatives
-from utils.convert_3D_To_1D import convert_3d_to_1d
+# from utils.removeNegatives import removeNegatives
+# from utils.convert_3D_To_1D import convert_3d_to_1d
+
+try:
+    sys.path.append('../utils')
+
+    from convert_3D_To_1D import convert_3d_to_1d
+    from removeNegatives import removeNegatives
+
+except Exception as e:
+    print(e)
 
 def relu(arr):
   return np.maximum(0, arr)

@@ -5,10 +5,18 @@ import numpy as np
 import sys
 import math
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+# sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
-from utils.removeNegatives import removeNegatives
-from utils.convert_3D_To_1D import convert_3d_to_1d
+# from utils.removeNegatives import removeNegatives
+# from utils.convert_3D_To_1D import convert_3d_to_1d
+try:
+    sys.path.append('../utils')
+
+    from convert_3D_To_1D import convert_3d_to_1d
+    from removeNegatives import removeNegatives
+
+except Exception as e:
+    print(e)
 
 def softmax(x):
   exp_x = np.exp(x - np.max(x))
@@ -51,7 +59,7 @@ def zkSoftmax(arguments , dir_path=''):
         proof = json.load(proof_file)
 
 
-    os.chdir(curr_path)
+    os.chdir(dir_path)
 
     return proof, arr
 

@@ -1,4 +1,4 @@
-from .convert_3D_To_1D import convert_3d_to_1d
+from convert_3D_To_1D import convert_3d_to_1d
 
 def removeNegatives(arguments):
     if isinstance(arguments[0], list):

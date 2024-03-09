@@ -13,8 +13,8 @@ os.environ['PYTHONPATH'] = f"{project_path};{current_pythonpath}"
 try: 
     sys.path.append('../../zkConv2D')
     sys.path.append('../../zkRelu')
-    sys.path.append('../../zkSoftmax')
     sys.path.append('../../zkMaxPooling')
+    sys.path.append('../../zkSoftmax')
     sys.path.append('../../zkArgmax')
     sys.path.append('../../zkFlatten')
     sys.path.append('../../zkApplyWeights')
@@ -29,10 +29,10 @@ try:
 
     from conv2d import zkConv2D
     from relu import zkRelu
+    from maxpooling import zkMaxPooling
     from softmax import zkSoftmax
     # from flatten import zkFlatten
     from apply_weights import zkApplyWeights
-    from maxpooling import zkMaxPooling
     from argmax import zkArgmax
 
     # from relu import zkRelu
