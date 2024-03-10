@@ -79,7 +79,7 @@ def zkConv2D(filter, bias, input, dir_path=''):
         f.write('const u32 num_filters = {};\n'.format(filter.shape[0]))
         f.write('const u32 channels = {};\n'.format(input.shape[2]))
                 
-    subprocess.run(["zokrates", "compile", "-i", "conv2d.zok", "--curve", "bls12_377"])
+    subprocess.run(["zokrates", "compile", "-i", "conv2d.zok"])
     subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
     subprocess.run(["powershell.exe", "Get-Content input.json |", "zokrates", "compute-witness", "--abi", "--stdin"], stdout=sys.stdout)
     subprocess.run(["zokrates", "generate-proof", "--proving-scheme", "gm17"])

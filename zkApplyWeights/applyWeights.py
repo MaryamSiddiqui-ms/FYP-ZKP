@@ -45,7 +45,7 @@ def zkApplyWeights(matrix1,matrix2,bias_b):
 
     print("Result of dot product of matrices with bias:")
 
-    subprocess.run(["zokrates", "compile", "-i", "applyWeights.zok", "--curve", "bls12_377"])
+    subprocess.run(["zokrates", "compile", "-i", "applyWeights.zok"])
     subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
     subprocess.run(["powershell.exe", "Get-Content input.json |", "zokrates", "compute-witness", "--abi", "--stdin","--verbose"], stdout=sys.stdout)
     subprocess.run(["zokrates", "generate-proof", "--proving-scheme", "gm17"])

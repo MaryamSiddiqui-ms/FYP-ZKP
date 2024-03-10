@@ -67,7 +67,7 @@ def zkTreeTraversal(tree, X_test, dir_path=''):
         f.write('const u32 numClasses = {};\n'.format(numClasses))
         f.write('const u32 numFeatures = {};\n'.format(num_features))
 
-    subprocess.run(["zokrates", "compile", "-i", "tree_traversal.zok", "--curve", "bls12_377"])
+    subprocess.run(["zokrates", "compile", "-i", "tree_traversal.zok"])
     subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
     subprocess.run(["powershell.exe", "Get-Content input.json |", "zokrates", "compute-witness", "--abi", "--stdin"], stdout=sys.stdout)
     subprocess.run(["zokrates", "generate-proof", "--proving-scheme", "gm17"])
