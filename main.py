@@ -85,8 +85,12 @@ def KNNProof(req: Item):
     zkSortProof, sortWitness = zkSort(distanceWitness, dir_path)
     zkmaxLabelProof, prediction = zkmaxLabel(sortWitness, k, dir_path)
 
-    paths = ['../zkDist', '../zkSort', '../zkMaxLabel']
-    final_proof = aggregate_proofs(paths, dir_path)
+    try:
+        paths = ['../zkDist', '../zkSort']
+        isVerified = aggregate_proofs(paths, dir_path)
+        
+        if !isVerified:
+            throw Exception("Proofs Not Verified")
 
     end_time = time.time()
     execution_time = (end_time - start_time) * 1000

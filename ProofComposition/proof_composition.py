@@ -70,18 +70,33 @@ def runZKP():
     subprocess.run(["powershell.exe", "Get-Content gm17.json |", "zokrates", "compute-witness", "--abi", "--stdin"], stdout=sys.stdout)
     subprocess.run(["zokrates", "generate-proof", "--proving-scheme", "gm17"])
 
-def aggregate_proofs(paths, dir_path):
-    curr_path = dir_path + '/ProofComposition'
-    os.chdir(curr_path)
 
-    for path in paths:
-        load_composite_proof([path])
-        runZKP()
+def verifyProofs(paths):
+    for dir_path in paths:
+        result = subprocess.run(["zokrates", "verify", "-j", f"{dir_path}/ProofComposition/proof.json", "-v", f"{dir_path}/ProofComposition/verification.key"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        output_lines = result.stdout.split('\n')
+        verification_status = next((line for line in output_lines if "PASSED" in line),"FAILED")
+        if verification_status == "FAILED":
+            return False
+        
+    return True
+
+def aggregate_proofs(paths, dir_path):
+    # curr_path = dir_path + '/ProofComposition'
+    # os.chdir(curr_path)
+    return verifyProofs(paths)
+        
+    # load_composite_proof([path])
+    # runZKP()
+        
+    
+        
+        
  
-    with open('proof.json', 'r') as file:
-        proof_data = json.load(file)
+    # with open('proof.json', 'r') as file:
+    #     proof_data = json.load(file)
     
-    os.chdir(dir_path)
+    # os.chdir(dir_path)
     
-    return proof_data
+    # return proof_data
 
