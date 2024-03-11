@@ -43,16 +43,15 @@ def zkMaxPooling(arguments, dir_path=''):
     labels = []
     data = []
 
-    # print(arguments)
-    act_arr = convert_3d_to_1d(arguments)
-    activated = np.array(act_arr)
-    pool = maxPool_2d(activated,2)
+    print(arguments)
+    
+
+    pool = maxPool_2d(arguments,2)
+
     pooled = np.array(pool)
 
-    # print(activated.shape)
-    # print(pooled.shape)
 
-    _, subarrays = append_subarrays(activated,pooled)
+    _, subarrays = append_subarrays(arguments,pooled)
     sub1d = convert_to_1d(subarrays)
     sub_activated = np.array(sub1d)
     mod_activated = sub_1d(sub_activated)
@@ -98,6 +97,6 @@ def zkMaxPooling(arguments, dir_path=''):
 
     os.chdir(dir_path)
 
-    return proof, pool
+    return pool, proof
 
 

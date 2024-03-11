@@ -59,6 +59,6 @@ def zkRelu(arguments, dir_path=''):
 
     os.chdir(dir_path)
 
-    return proof, arr
+    return arr, proof
 
 

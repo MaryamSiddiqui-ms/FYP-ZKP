@@ -66,7 +66,7 @@ class CNN:
     
     
     def build(self):
-        self.inputs.reshape(28,28,1)
+        self.inputs.reshape(6,6,1)
         (filters_1, bias_1) = extract_filter_and_bias(self.weights, "conv2d_19")
         (filters_2, bias_2) = extract_filter_and_bias(self.weights, "conv2d_20")
         (filters_3, bias_3) = extract_filter_and_bias(self.weights, "conv2d_21")
