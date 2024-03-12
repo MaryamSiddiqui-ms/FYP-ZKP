@@ -86,8 +86,8 @@ class DecisionTree:
         print("\nFINAL CLASS: ", prediction)
         print("\nEXECUTION TIME: ", self.getExecutionTime())
         return {
-            "proof": proof,
-            "prediction": final_proof
+            "proof": final_proof,
+            "prediction": prediction
         }
 
 

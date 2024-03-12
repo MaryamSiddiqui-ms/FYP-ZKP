@@ -8,6 +8,8 @@ import uvicorn
 from fastapi import FastAPI, Request, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import json
+
 
 current_file_path = os.path.abspath(__file__)
 project_path = os.path.dirname(os.path.dirname(current_file_path))
@@ -102,12 +104,20 @@ def KNNProof(req: Item):
 
 @app.get("/verify")
 def verify(proof_path: str = ''):
-    dir_path = os.getcwd()
-    result = subprocess.run(["zokrates", "verify", "-j", f"{dir_path}/{proof_path}/proof.json", "-v", f"{dir_path}/{proof_path}/verification.key"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-    output_lines = result.stdout.split('\n')
+    # dir_path = os.getcwd()
+    # result = subprocess.run(["zokrates", "verify", "-j", f"{dir_path}/{proof_path}/proof.json", "-v", f"{dir_path}/{proof_path}/verification.key"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    # output_lines = result.stdout.split('\n')
     
-    verification_status = next((line for line in output_lines if "PASSED" in line),"FAILED")
-    return {"verification_status": verification_status}
+    # verification_status = next((line for line in output_lines if "PASSED" in line),"FAILED")
+    # return {"verification_status": verification_status}
+
+    with open('./blockchain/artifacts/contracts/verifier.sol/Verifier.json', 'r') as file:
+        abi = json.load(file)
+    
+    contract_address = "0xbC2F4843B56163F97e805E5ef79E0d19ed59012c"
+    
+    return {"abi": abi, "contract_address": contract_address}
+
 
 
 @app.post("/decisiontree/prove")
