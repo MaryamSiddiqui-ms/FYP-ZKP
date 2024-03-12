@@ -32,7 +32,7 @@ try:
     from maxpooling import zkMaxPooling
     from softmax import zkSoftmax
     # from flatten import zkFlatten
-    from apply_weights import zkApplyWeights
+    from applyWeights import zkApplyWeights
     from argmax import zkArgmax
 
     # from relu import zkRelu
@@ -66,7 +66,8 @@ class CNN:
     
     
     def build(self):
-        self.inputs.reshape(6,6,1)
+        self.inputs = self.inputs.reshape(28,28,1)
+        
         (filters_1, bias_1) = extract_filter_and_bias(self.weights, "conv2d_19")
         (filters_2, bias_2) = extract_filter_and_bias(self.weights, "conv2d_20")
         (filters_3, bias_3) = extract_filter_and_bias(self.weights, "conv2d_21")
@@ -78,6 +79,12 @@ class CNN:
         proofs = []
         
         dir_path = os.getcwd()
+        
+        
+        
+        self.inputs = (self.inputs / 255.0) * (10**4)
+        self.inputs = self.inputs.astype(int)
+
 
         output_1, proof1 = zkConv2D(filters_1, bias_1, self.inputs, project_path)
         activated_1, proof2 = zkRelu(output_1, project_path)

@@ -30,7 +30,7 @@ def zkSoftmax(arguments , dir_path=''):
 
     print(arguments)
 
-    arr = zkSoftmax(arguments)
+    arr = softmax(arguments)
 
     mod_arr = convert_3d_to_1d(arr)
     # mod_arr = [item for item in arr]

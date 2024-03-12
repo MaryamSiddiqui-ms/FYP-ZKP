@@ -15,6 +15,7 @@ try:
 
     from convert_3D_To_1D import convert_3d_to_1d
     from removeNegatives import removeNegatives
+    from clean import clean_dirs
 
 except Exception as e:
     print(e)
@@ -28,12 +29,16 @@ def zkRelu(arguments, dir_path=''):
     labels = []
     data = []
 
-    # print(arguments)
+    print(arguments)
 
     arr = relu(arguments)
 
     moded_arr = convert_3d_to_1d(arr)
-    modified_arr, positive_min = removeNegatives(moded_arr)
+    if len(moded_arr) > 0:
+        modified_arr, positive_min = removeNegatives(moded_arr)
+    else:
+        modified_arr = moded_arr
+        positive_min = 0
     mod_arr = [item for item in modified_arr]
     str_mod_arr = [str(item) for item in mod_arr]
     sys.path.pop()
@@ -58,6 +63,7 @@ def zkRelu(arguments, dir_path=''):
 
 
     os.chdir(dir_path)
+    clean_dirs()
 
     return arr, proof
 

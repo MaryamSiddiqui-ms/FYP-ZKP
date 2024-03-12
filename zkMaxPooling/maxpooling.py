@@ -20,6 +20,8 @@ try:
     from removeNegatives import removeNegatives
     from activated_mat_to_1d import append_subarrays, convert_to_1d, sub_1d
     from maxpooled_mat_to_1d import convert_pooled_mat_to_1d
+    from minMaxNormalizationAndInteger import minMaxNorm4
+    from clean import clean_dirs
 
 except Exception as e:
     print(e)
@@ -43,7 +45,7 @@ def zkMaxPooling(arguments, dir_path=''):
     labels = []
     data = []
 
-    print(arguments)
+    # print(arguments)
     
 
     pool = maxPool_2d(arguments,2)
@@ -96,6 +98,9 @@ def zkMaxPooling(arguments, dir_path=''):
 
 
     os.chdir(dir_path)
+    
+    pool = minMaxNorm4(pool)
+    clean_dirs()
 
     return pool, proof
 

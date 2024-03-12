@@ -10,14 +10,10 @@ sys.path.append('../utils')
 
 from clean import clean_dirs
 from extractor import extract_filter_and_bias
+from minMaxNormalizationAndInteger import minMaxNorm4
 
 def summation(arr):
-    tmp = arr.reshape(-1)
-    sum = 0
-    for i in tmp:
-        sum += i
-        
-    return sum
+    return np.sum(arr)
 
 
 
@@ -43,32 +39,22 @@ def zkConv2D(filter, bias, input, dir_path=''):
     curr_path = dir_path + '/zkConv2D'
     os.chdir(curr_path)
     
-    min_val = filter.min()
-    if min_val < 0:
-        filter += abs(min_val)
-    filter_nor = filter * math.pow(10,4)
-    
-
-    filter_int = filter_nor.astype(int)    
-    filter_str = filter_int.astype(str)
-
+    if filter.min() < 0:
+        filter += abs(filter.min())
+        
     if bias.min() < 0:
         bias += abs(bias.min())
-    bias_nor = bias * math.pow(10,4)
-    bias_int = bias.astype(int)
-    bias_str = bias_int.astype(str)
+     
+    filter_str = filter.astype(str)
+    bias_str = bias.astype(str)
+    input_str = input.astype(str)
 
-    if input.min() < 0:
-        input += abs(input.min())
-    input_nor = input * math.pow(10,4)
-    input_int = input_nor.astype(int)
-    input_str = input_int.astype(str)
-
-    out = conv2d(input_int, filter_int, bias_int, filter_int.shape[0])
+    out = conv2d(input, filter, bias, filter.shape[0])
     
     out_int = out.astype(int)
-    out_str = out.astype(str)
+    out_str = out_int.astype(str)
     data = [filter_str.tolist(), bias_str.tolist(), input_str.tolist(), out_str.tolist()]
+    
     
     with open('input.json', 'w') as f:
         json.dump(data, f)
@@ -89,7 +75,9 @@ def zkConv2D(filter, bias, input, dir_path=''):
     
     os.chdir(dir_path)
     
-    return out_int, proof
+    out = minMaxNorm4(out)
+    clean_dirs()
+    return out, proof
     
 
     
