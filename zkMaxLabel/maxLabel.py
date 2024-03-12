@@ -8,8 +8,6 @@ def zkmaxLabel(knn_output, K, dir_path):
     curr_path = dir_path + '/zkMaxLabel'
     os.chdir(curr_path)
     
-
-
     truncated = knn_output[:K]
     labels = [sublist[1] for sublist in truncated]
 
@@ -23,7 +21,7 @@ def zkmaxLabel(knn_output, K, dir_path):
     with open('size.zok', 'w') as f:
         f.write('const u32 size = {};\n'.format(int(len(labels))))
     print("Max Label: ", labels)
-    subprocess.run(["zokrates", "compile", "-i", "maxLabel.zok", "--curve", "bls12_377"])
+    subprocess.run(["zokrates", "compile", "-i", "maxLabel.zok"])
     subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
     result = subprocess.run(["zokrates", "compute-witness", "--verbose", "-a"] + labels, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     

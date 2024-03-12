@@ -33,7 +33,7 @@ def zkArgmax(output_probs, dir_path):
     arguments = getArguments()
     setSize(arguments)
 
-    subprocess.run(["zokrates", "compile", "-i", "argmax.zok","--curve", "bls12_377"])
+    subprocess.run(["zokrates", "compile", "-i", "argmax.zok"])
     subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
     result = subprocess.run(["zokrates", "compute-witness", "--verbose", "-a"] + arguments, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     

@@ -82,7 +82,7 @@ def zkDistance(normd_df, dir_path=''):
         f.write('const u32 cols = {};\n'.format(cols))
         f.write('const u32 test = {};\n'.format(cols-1))
 
-    subprocess.run(["zokrates", "compile", "-i", "distance.zok", "--curve", "bls12_377"])
+    subprocess.run(["zokrates", "compile", "-i", "distance.zok"])
     subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
     subprocess.run(["powershell.exe", "Get-Content input.json |", "zokrates", "compute-witness", "--abi", "--stdin"], stdout=sys.stdout)
     subprocess.run(["zokrates", "generate-proof", "--proving-scheme", "gm17"])

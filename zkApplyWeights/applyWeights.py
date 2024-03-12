@@ -2,7 +2,7 @@ import subprocess
 import json
 import sys
 import numpy as np
-
+import math
 
 # dot_product = np.dot(matrix1, matrix2)
 # result = dot_product + bias_b
@@ -30,17 +30,22 @@ def zkApplyWeights(matrix1,matrix2,bias_b):
     result = dot_product + bias_b
     print(result)
     
-    matrix_1 = list(map(lambda row: [str(element) for element in row], matrix1))
-    matrix_2 = list(map(lambda row: [str(element) for element in row], matrix2))
-    bias = bias_b[0].astype(str).tolist()
-    result = list(map(lambda row: [str(element) for element in row], result))
+    matrix_1 = list(map(lambda row: [str(int(element*math.pow(10,8))) for element in row], matrix1))
+    matrix_2 = list(map(lambda row: [str(int(element*math.pow(10,8))) for element in row], matrix2))
+
+    # bias = bias_b[0].astype(str).tolist()
+
+    bias = [str(int(item * math.pow(10,8))) for item in bias_b[0]]  # Convert the first element of bias_b to string and store in a list
+
+
+    # result = list(map(lambda row: [str(element*math.pow(10,8)) for element in row], result))
     
     with open('input.json', 'w') as f:
         json.dump([matrix_1,matrix_2,bias], f)
 
     print("Result of dot product of matrices with bias:")
 
-    subprocess.run(["zokrates", "compile", "-i", "applyWeights.zok", "--curve", "bls12_377"])
+    subprocess.run(["zokrates", "compile", "-i", "applyWeights.zok"])
     subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
     subprocess.run(["powershell.exe", "Get-Content input.json |", "zokrates", "compute-witness", "--abi", "--stdin","--verbose"], stdout=sys.stdout)
     subprocess.run(["zokrates", "generate-proof", "--proving-scheme", "gm17"])

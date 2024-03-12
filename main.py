@@ -23,6 +23,13 @@ try:
     sys.path.append('./ProofComposition')
     sys.path.append('./utils')
     sys.path.append('./models/DecisionTree')
+    sys.path.append('../../zkConv2D')
+    sys.path.append('../../zkRelu')
+    sys.path.append('../../zkSoftmax')
+    sys.path.append('../../zkMaxPooling')
+    sys.path.append('../../zkArgmax')
+    sys.path.append('../../zkApplyWeights')
+    sys.path.append('./models/CNN')
 
     from minMaxNormalizationAndInteger import minMaxNormalizationAndInteger
     from clean import clean_dirs
@@ -78,23 +85,25 @@ def KNNProof(req: Item):
     zkSortProof, sortWitness = zkSort(distanceWitness, dir_path)
     zkmaxLabelProof, prediction = zkmaxLabel(sortWitness, k, dir_path)
 
-    paths = ['../zkDist', '../zkSort', '../zkMaxLabel']
-    final_proof = aggregate_proofs(paths, dir_path)
-
+    paths = ['./zkDist', './zkSort']
+    isVerified = aggregate_proofs(paths, dir_path)
+    if not isVerified:
+        raise Exception("Proofs Not Verified")
+        
     end_time = time.time()
     execution_time = (end_time - start_time) * 1000
     print(execution_time)
 
     return {
         "prediction": prediction,
-        "proof": final_proof
+        "proof": zkmaxLabelProof
     }
 
 
 @app.get("/verify")
-def verify():
+def verify(proof_path: str = ''):
     dir_path = os.getcwd()
-    result = subprocess.run(["zokrates", "verify", "-j", f"{dir_path}/ProofComposition/proof.json", "-v", f"{dir_path}/ProofComposition/verification.key"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    result = subprocess.run(["zokrates", "verify", "-j", f"{dir_path}/{proof_path}/proof.json", "-v", f"{dir_path}/{proof_path}/verification.key"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     output_lines = result.stdout.split('\n')
     
     verification_status = next((line for line in output_lines if "PASSED" in line),"FAILED")

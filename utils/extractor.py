@@ -1,3 +1,5 @@
+import numpy as np
+
 def extract_filter_and_bias(weights_dict, key):
     filters = weights_dict[key][0]
     bias = weights_dict[key][1]
