@@ -114,7 +114,7 @@ def verify(proof_path: str = ''):
     with open('./blockchain/artifacts/contracts/verifier.sol/Verifier.json', 'r') as file:
         abi = json.load(file)
     
-    contract_address = "0xbC2F4843B56163F97e805E5ef79E0d19ed59012c"
+    contract_address = "0x1Cbb8Ee26C18AD0e193EE4CBC27F58761FC4A4a0"
     
     return {"abi": abi, "contract_address": contract_address}
 

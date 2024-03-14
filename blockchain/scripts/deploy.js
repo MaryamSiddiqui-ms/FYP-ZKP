@@ -1,7 +1,7 @@
 // scripts/deploy.js
 const { ethers } = require("hardhat");
 const abi = require("../artifacts/contracts/verifier.sol/Verifier.json");
-const proof = require("../../zkArgmax/proof.json");
+const proof = require("../../zkMaxLabel/proof.json");
 
 // const provider2 = new ethers.providers.JsonRpcProvider(`http://127.0.0.1:8545`)
 
@@ -23,11 +23,13 @@ async function main() {
   const verifier = await Verifier.deploy();
 
   console.log("Verifier deployed to:", verifier.target);
+  console.log(proof.proof);
+  console.log(proof.inputs);
 
-  // const x = await verifier
-  //   .connect(address1)
-  //   .verifyTx(proof.proof, proof.inputs);
-  // console.log("YOUR OUTPUT IS: ", x);
+  const x = await verifier
+    .connect(address1)
+    .verifyTx(proof.proof, proof.inputs);
+  console.log("YOUR OUTPUT IS: ", x);
 
   // deployed address 0x057cD3082EfED32d5C907801BF3628B27D88fD80
 }
