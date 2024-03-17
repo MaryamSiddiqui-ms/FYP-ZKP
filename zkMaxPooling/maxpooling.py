@@ -88,7 +88,7 @@ def zkMaxPooling(arguments, dir_path=''):
     with open('input.json', 'w') as f:
         json.dump([str_mod_act_arr,str_mod_pool_arr,str(4)], f)
 
-    subprocess.run(["zokrates", "compile", "-i", "maxpooling.zok", "--curve", "bls12_377"])
+    subprocess.run(["zokrates", "compile", "-i", "maxpooling.zok"])
     subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
     subprocess.run(["powershell.exe", "Get-Content input.json |", "zokrates", "compute-witness", "--abi", "--stdin"], stdout=sys.stdout)
         

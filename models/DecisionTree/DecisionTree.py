@@ -60,21 +60,22 @@ class DecisionTree:
         zkTreeTraversalProof, TreeTraversalWitness = zkTreeTraversal(treeArr, X_test, dir_path)
         zkArgmaxProof, prediction = zkArgmax(TreeTraversalWitness, dir_path)
 
-        paths = ['../zkTreeTraversal', '../zkArgmax']
+        paths = ['../zkTreeTraversal']
         final_proof = aggregate_proofs(paths, dir_path)
 
         end_time = time.time()
         self._setExecutionTime(end_time - start_time)
 
-        return prediction,final_proof
+        return prediction, zkArgmaxProof
 
     def verify_dt(self):
         dir_path = os.getcwd()
-        result = subprocess.run(["zokrates", "verify", "-j", f"{dir_path}/ProofComposition/proof.json", "-v", f"{dir_path}/ProofComposition/verification.key"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        proof_path = "../zkArgmax"
+        result = subprocess.run(["zokrates", "verify", "-j", f"{dir_path}/{proof_path}/proof.json", "-v", f"{dir_path}/{proof_path}/verification.key"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         output_lines = result.stdout.split('\n')
         
         verification_status = next((line for line in output_lines if "PASSED" in line),"FAILED")
-        return {"verification_status": verification_status}
+        return  {"verification_status": verification_status}
     
     def main(self):
         clean_dirs()
@@ -84,7 +85,7 @@ class DecisionTree:
         
         print("\nFINAL CLASS: ", prediction)
         print("\nEXECUTION TIME: ", self.getExecutionTime())
-        return final_proof, prediction
+        return (final_proof, prediction)
 
 
 

@@ -53,7 +53,7 @@ def zkRelu(arguments, dir_path=''):
     with open('input.json', 'w') as f:
         json.dump([str_mod_arr,str(int(positive_min))], f)
 
-    subprocess.run(["zokrates", "compile", "-i", "relu.zok", "--curve", "bls12_377"])
+    subprocess.run(["zokrates", "compile", "-i", "relu.zok"])
     subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
     subprocess.run(["powershell.exe", "Get-Content input.json |", "zokrates", "compute-witness", "--abi", "--stdin"], stdout=sys.stdout)
         
