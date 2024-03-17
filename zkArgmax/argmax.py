@@ -1,29 +1,41 @@
 import subprocess 
 import json
 import os
-from collections import Counter
 
-def zkmaxLabel(knn_output, K, dir_path):
-   
-    curr_path = dir_path + '/zkMaxLabel'
-    os.chdir(curr_path)
-    
-    truncated = knn_output[:K]
-    labels = [sublist[1] for sublist in truncated]
+def getArguments():
+    with open('input.json', 'r') as f:
+        data = json.load(f)
 
-    
-    counter = Counter(labels)
-    max_label = counter.most_common(1)[0][0]
-   
+    data = [int(x) for x in data]
+    arguments = list(map(str, data))
 
-    labels.append(max_label)
+    max_index = data.index(max(data))
+    print("MAX", max_index)
+
+    arguments.append(str(max_index))
+    print(arguments)
     
+    return arguments
+
+def setSize(arguments):
+    size = int(len(arguments)) -1
     with open('size.zok', 'w') as f:
-        f.write('const u32 size = {};\n'.format(int(len(labels))))
-    print("Max Label: ", labels)
-    subprocess.run(["zokrates", "compile", "-i", "maxLabel.zok"])
+            f.write('const u32 size = {};\n'.format(size))
+
+def zkArgmax(output_probs, dir_path):
+
+    curr_path = dir_path + '/zkArgmax'
+    os.chdir(curr_path)
+
+    with open('input.json', 'w') as f:
+        json.dump(output_probs, f)
+    
+    arguments = getArguments()
+    setSize(arguments)
+
+    subprocess.run(["zokrates", "compile", "-i", "argmax.zok"])
     subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
-    result = subprocess.run(["zokrates", "compute-witness", "--verbose", "-a"] + labels, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    result = subprocess.run(["zokrates", "compute-witness", "--verbose", "-a"] + arguments, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     
     output_lines = result.stdout.split('\n')
     
@@ -39,9 +51,11 @@ def zkmaxLabel(knn_output, K, dir_path):
         output_file.write( witness_array_line )
         
     subprocess.run(["zokrates", "generate-proof", "--proving-scheme", "gm17"])
+    
     with open("proof.json", 'r') as proof_file:
         proof = json.load(proof_file)
-        
+    
+    
     with open('witness_output.txt', 'r') as file:
         content = json.load(file)
         print("Prediction: ", content[0])
@@ -49,3 +63,4 @@ def zkmaxLabel(knn_output, K, dir_path):
     os.chdir(dir_path)
 
     return proof, content[0]
+

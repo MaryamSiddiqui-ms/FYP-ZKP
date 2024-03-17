@@ -29,7 +29,7 @@ def zkSort(arguments, dir_path=''):
     with open('input.json', 'w') as f:
         json.dump([sorted_arr], f)
 
-    subprocess.run(["zokrates", "compile", "-i", "sortver.zok", "--curve", "bls12_377"])
+    subprocess.run(["zokrates", "compile", "-i", "sortver.zok"])
     subprocess.run(["zokrates", "setup", "--proving-scheme", "gm17"])
     subprocess.run(["powershell.exe", "Get-Content input.json |", "zokrates", "compute-witness", "--abi", "--stdin"], stdout=sys.stdout)
         

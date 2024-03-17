@@ -1,0 +1,28 @@
+from "./size.zok" import M1; 
+from "./size.zok" import M2;
+from "./size.zok" import N1;
+from "./size.zok" import N2;
+from "./size.zok" import br;
+from "./size.zok" import bc;
+
+
+
+def main(private field[M1][N1] matrix1, private field[M2][N2] matrix2, private field[bc] bias,public field[M1][N2]py_result){
+    // Initialize the result matrix as a  2D array of field elements
+    
+    field [M1][N2] mut result = [[0; N2]; M1];
+
+    for u32 i in  0..M1 {
+        for u32 j in  0..N2 {
+            field mut temp =  0; // Ensure temp is of type field
+            for u32 k in  0..N1 {
+                // Perform multiplication within the field
+                temp = temp + (matrix1[i][k] * matrix2[k][j]);
+            }
+                result[i][j] = temp + bias[j];
+        }
+    }
+    assert (py_result==result) ;
+  
+    return;
+}
