@@ -199,5 +199,5 @@ def run_dt(inputs):
     my_tree.train(X_train, Y_train)
 
     dt = DecisionTree(my_tree.tree, inputs)
-    proof, prediction  = dt.main()
+    (proof, prediction)  = dt.main()
     return proof, prediction
