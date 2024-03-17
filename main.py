@@ -8,6 +8,8 @@ import uvicorn
 from fastapi import FastAPI, Request, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import json
+import re
 
 current_file_path = os.path.abspath(__file__)
 project_path = os.path.dirname(os.path.dirname(current_file_path))
@@ -103,11 +105,44 @@ def KNNProof(req: Item):
 @app.get("/verify")
 def verify(proof_path: str = ''):
     dir_path = os.getcwd()
-    result = subprocess.run(["zokrates", "verify", "-j", f"{dir_path}/{proof_path}/proof.json", "-v", f"{dir_path}/{proof_path}/verification.key"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-    output_lines = result.stdout.split('\n')
     
-    verification_status = next((line for line in output_lines if "PASSED" in line),"FAILED")
-    return {"verification_status": verification_status}
+    
+    script_path = f"{dir_path}/blockchain"
+    node_path = "C:\\Program Files\\nodejs\\node.exe"
+    
+    os.chdir(script_path)
+    
+    result = subprocess.run(["zokrates", "export-verifier", "-i", f"{dir_path}/{proof_path}/verification.key", "-o", f"{dir_path}/blockchain/contracts/verifier.sol"])
+    
+
+    # Construct the command to run, ensuring that newline characters are correctly escaped
+    command = f'"{node_path}" -e "require(\'child_process\').exec(\'npx hardhat run scripts/deploy.js --network localhost\', (error, stdout, stderr) => {{ if (error) {{ console.error(error); return; }} console.log(stdout);}})"'
+    result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    
+
+    # Check the result
+    if result.returncode == 0:
+        # Extract the address from the output
+        match = re.search(r'deployed to: (0x[a-fA-F0-9]{40})', result.stdout)
+        if match:
+            address = match.group(1)
+            print(address)
+        else:
+            print("Address not found in the output.")
+    else:
+        print(f"Command failed with return code {result.returncode}.")
+
+
+        
+    os.chdir(dir_path)
+
+    with open('./blockchain/artifacts/contracts/verifier.sol/Verifier.json', 'r') as file:
+        abi = json.load(file)
+    
+    contract_address = "0x563bAd2efacFd1C761336C4F1005CE38dc860D0A"
+    
+    return {"abi": abi, "contract_address": address}
+
 
 
 @app.post("/decisiontree/prove")
