@@ -16,15 +16,13 @@ def generateProofCnn(input_image):
     params_file = 'weights_4.json'
     weights_dict = getModelParams(params_file)
     
-
-    
     model = CNN(weights_dict, input_image)
     
     model.build()
     return model.predicted, model.proof
 
 
-generateProofCnn(np.random.rand(28, 28, 1))
+generateProofCnn(np.random.randint(0, 256, size=(28, 28)))
     
     
     
