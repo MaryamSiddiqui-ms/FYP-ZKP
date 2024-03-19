@@ -14,3 +14,4 @@ gm17.json
 input.json
 size.zok
 node_modules
+.env

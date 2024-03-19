@@ -32,6 +32,7 @@ try:
     sys.path.append('../../zkArgmax')
     sys.path.append('../../zkApplyWeights')
     sys.path.append('./models/CNN')
+    sys.path.append('./services')
 
     from minMaxNormalizationAndInteger import minMaxNormalizationAndInteger
     from clean import clean_dirs
@@ -42,6 +43,7 @@ try:
     from proof_composition import aggregate_proofs
     
     from decision_tree import run_dt 
+    from prompt import generatePrompt
 
 except Exception as e:
     print(e)
@@ -56,6 +58,9 @@ class DTInputs(BaseModel):
     x2: float
     x3: float
     x4: float
+    
+class PromptInputs(BaseModel):
+    inputCode: str
 
 app = FastAPI()
 app.add_middleware(
@@ -160,6 +165,14 @@ def proofDT(req: DTInputs):
 # @app.post("/decisiontree/verify")
 # def verifyDT():
 #     verification_status = verify_dt()
+
+@app.post("/prompt-generation")
+def getPrompt(req: PromptInputs):
+    response = generatePrompt(req.inputCode)
+    return {
+        "response": response
+    }
+
     
 
 if __name__ == "__main__":
