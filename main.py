@@ -10,6 +10,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import json
 import re
+import tensorflow as tf
+# import tf.keras.datasets.mnist as mnist
+
 
 current_file_path = os.path.abspath(__file__)
 project_path = os.path.dirname(os.path.dirname(current_file_path))
@@ -160,7 +163,16 @@ def proofDT(req: DTInputs):
 # @app.post("/decisiontree/verify")
 # def verifyDT():
 #     verification_status = verify_dt()
-    
+
+@app.get("/CNN/mnist")  
+def getData():
+    _, (test_images, test_labels) = tf.keras.datasets.mnist.load_data()
+    digit_images = {}    
+    for image, label in zip(test_images, test_labels):
+        if label not in digit_images:
+            digit_images[label] = image.tolist()    
+    selected_images = list(digit_images.values())    
+    return selected_images
 
 if __name__ == "__main__":
     uvicorn.run(app, host='0.0.0.0', port=80)
