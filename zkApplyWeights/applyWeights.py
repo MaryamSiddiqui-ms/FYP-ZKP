@@ -57,8 +57,8 @@ def zkApplyWeights(matrix1,matrix2,bias_b):
     
 
 # subprocess.run(["zokrates", "verify"])
-matrix1 = np.array([["1",  "2",  "3"], ["4",  "5",  "6"]], dtype=int)
-matrix2 = np.array([["7",  "8"], ["9",  "10"], ["11",  "12"]], dtype=int)
-bias_b = np.array([["1", "3"]], dtype=int)
+# matrix1 = np.array([["1",  "2",  "3"], ["4",  "5",  "6"]], dtype=int)
+# matrix2 = np.array([["7",  "8"], ["9",  "10"], ["11",  "12"]], dtype=int)
+# bias_b = np.array([["1", "3"]], dtype=int)
 
-zkApplyWeights(matrix1,matrix2,bias_b)
+# zkApplyWeights(matrix1,matrix2,bias_b)
