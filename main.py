@@ -12,6 +12,9 @@ import json
 import re
 import tensorflow as tf
 # import tf.keras.datasets.mnist as mnist
+from typing import List
+
+
 
 
 current_file_path = os.path.abspath(__file__)
@@ -45,6 +48,7 @@ try:
     from proof_composition import aggregate_proofs
     
     from decision_tree import run_dt 
+    from cnn_main import generateProofCnn
 
 except Exception as e:
     print(e)
@@ -59,6 +63,10 @@ class DTInputs(BaseModel):
     x2: float
     x3: float
     x4: float
+
+class CNNInputs(BaseModel):
+    input_image: List[List[int]]
+
 
 app = FastAPI()
 app.add_middleware(
@@ -158,6 +166,19 @@ def proofDT(req: DTInputs):
     return {
         "proof": proof,
         "prediction": prediction
+    }
+
+@app.post("/CNN/prove")
+def proofCNN(req: CNNInputs):
+    clean_dirs()
+    input_image = req.input_image
+    # input_image = json.loads(input_image_str)  # Convert the string back to a 2D array
+    
+    prediction, proof = generateProofCnn(input_image)
+    
+    return {
+        "proof": "proof",
+        "prediction": "prediction"
     }
 
 # @app.post("/decisiontree/verify")
