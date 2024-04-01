@@ -68,13 +68,13 @@ class CNN:
     def build(self):
         self.inputs = self.inputs.reshape(28,28,1)
         
-        (filters_1, bias_1) = extract_filter_and_bias(self.weights, "conv2d_19")
-        (filters_2, bias_2) = extract_filter_and_bias(self.weights, "conv2d_20")
-        (filters_3, bias_3) = extract_filter_and_bias(self.weights, "conv2d_21")
-        dense_1 = np.array(self.weights["dense_14"][0]).transpose()
-        bias_d1 = np.array(self.weights["dense_14"][1])
-        dense_2 = np.array(self.weights["dense_15"][0]).transpose()
-        bias_d2 = np.array(self.weights["dense_15"][1])
+        (filters_1, bias_1) = extract_filter_and_bias(self.weights, "conv2d")
+        (filters_2, bias_2) = extract_filter_and_bias(self.weights, "conv2d_1")
+        (filters_3, bias_3) = extract_filter_and_bias(self.weights, "conv2d_2")
+        dense_1 = np.array(self.weights["dense"][0]).transpose()
+        bias_d1 = np.array(self.weights["dense"][1])
+        dense_2 = np.array(self.weights["dense_1"][0]).transpose()
+        bias_d2 = np.array(self.weights["dense_1"][1])
         
         proofs = []
         

@@ -12,7 +12,10 @@ def get_matrix_dimensions(matrix):
     rows = len(matrix)
     columns = len(matrix[0]) if rows > 0 else 0
     return rows, columns
-def zkApplyWeights(matrix1,matrix2,bias_b):
+def zkApplyWeights(matrix1,matrix2,bias_b, dir_path = ''):
+
+    curr_path = dir_path + '/zkApplyWeights'
+    os.chdir(curr_path)
 
     rows1, columns1 = get_matrix_dimensions(matrix1)
     rows2, columns2 = get_matrix_dimensions(matrix2)
@@ -28,7 +31,6 @@ def zkApplyWeights(matrix1,matrix2,bias_b):
         
     dot_product = np.dot(matrix1, matrix2)
     result = dot_product + bias_b
-    print(result)
     
     matrix_1 = list(map(lambda row: [str(int(element*math.pow(10,8))) for element in row], matrix1))
     matrix_2 = list(map(lambda row: [str(int(element*math.pow(10,8))) for element in row], matrix2))
@@ -52,6 +54,8 @@ def zkApplyWeights(matrix1,matrix2,bias_b):
 
     with open("proof.json", 'r') as proof_file:
         proof = json.load(proof_file)
+        
+    os.chdir(dir_path)
         
     return proof,result
     

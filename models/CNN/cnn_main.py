@@ -13,7 +13,7 @@ def getModelParams(file_path):
 
 
 def generateProofCnn(input_image):
-    params_file = 'weights_4.json'
+    params_file = 'weights_5.json'
     weights_dict = getModelParams(params_file)
     
     model = CNN(weights_dict, input_image)
