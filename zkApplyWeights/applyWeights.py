@@ -24,8 +24,8 @@ def zkApplyWeights(matrix1,matrix2,bias_b, dir_path = ''):
     os.chdir(curr_path)
 
     
-    matrix1 = matrix1.astype(int)
-    matrix2 = matrix2.astype(int)
+    matrix1 = matrix1.astype(np.int64)
+    matrix2 = matrix2.astype(np.int64)
     
     # max1 = np.maximum(matrix1)
     # max2 = np.maximum(matrix2)
@@ -33,8 +33,8 @@ def zkApplyWeights(matrix1,matrix2,bias_b, dir_path = ''):
     # matrix1 //= max1
     # matrix2 //= max2
 
-    matrix1 = matrix1 * math.pow(10,4)
-    matrix2 = matrix2 * math.pow(10,4)
+    # matrix1 = matrix1 * math.pow(10,4)
+    # matrix2 = matrix2 * math.pow(10,4)
     
     rows1, columns1 = get_matrix_dimensions(matrix1)
     rows2, columns2 = get_matrix_dimensions(matrix2)
