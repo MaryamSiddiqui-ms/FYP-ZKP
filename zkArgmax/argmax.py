@@ -62,5 +62,5 @@ def zkArgmax(output_probs, dir_path):
 
     os.chdir(dir_path)
 
-    return proof, content[0]
+    return content[0], proof
 

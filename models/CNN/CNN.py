@@ -104,8 +104,8 @@ class CNN:
 
         output_d2, proof11 = zkApplyWeights(dense_2, activated_d1, bias_d2, project_path)
         activated_d2, proof12 = zkRelu(output_d2, project_path)
-        activated_d2, proof13= activated_d2.reshape(-1)
-        final, proof14 = zkSoftmax(activated_d2, project_path)
+        activated_d2.reshape(-1)
+        final, proof13 = zkSoftmax(activated_d2, project_path)
         prediction, proof15 = zkArgmax(final)
 
         # Aggregate proofs
