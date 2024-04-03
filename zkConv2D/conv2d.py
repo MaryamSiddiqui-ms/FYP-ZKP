@@ -24,7 +24,7 @@ def conv2d(input, filters, bias, num_filters):
     output_height = input_height - filter_height + 1
     output_width = input_width - filter_width + 1
 
-    output = np.zeros((output_height, output_width, num_filters), dtype='int')
+    output = np.zeros((output_height, output_width, num_filters), dtype=np.int64)
 
     for k in range(num_filters):
         for i in range(output_height):
@@ -51,7 +51,7 @@ def zkConv2D(filter, bias, input, dir_path=''):
 
     out = conv2d(input, filter, bias, filter.shape[0])
     
-    out_int = out.astype(int)
+    out_int = out.astype(np.int64)
     out_str = out_int.astype(str)
     data = [filter_str.tolist(), bias_str.tolist(), input_str.tolist(), out_str.tolist()]
     
