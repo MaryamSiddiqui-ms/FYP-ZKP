@@ -14,16 +14,16 @@ def getModelParams(file_path):
 
 
 def generateProofCnn(input_image):
-    params_file = 'weights_7.json'
+    params_file = 'weights_5.json'
     weights_dict = getModelParams(params_file)
     
     start = time.time()
     model = CNN(weights_dict, input_image)
-    model.build()
+    model.buildWithoutZok()
     end = time.time()
     
     execution_time = (end - start)
-    print(execution_time)
+    print("EXECUTION TIME: ", execution_time)
     
     return model.predicted, model.proof
 
