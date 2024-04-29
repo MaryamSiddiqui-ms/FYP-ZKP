@@ -19,11 +19,11 @@ def extract_filter_and_bias(weights_dict, key):
     if min_val < 0:
         filters += abs(min_val)
     filters = filters * math.pow(10,4)
-    filters = filters.astype(int)
+    filters = filters.astype(np.int64)
     
     if bias.min() < 0:
         bias += abs(bias.min())
     bias = bias * math.pow(10,4)
-    bias = bias.astype(int)
+    bias = bias.astype(np.int64)
 
     return (filters, bias)

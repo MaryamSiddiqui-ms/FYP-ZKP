@@ -28,7 +28,7 @@ def zkArgmax(output_probs, dir_path):
     os.chdir(curr_path)
 
     with open('input.json', 'w') as f:
-        json.dump(output_probs, f)
+        json.dump(output_probs.tolist(), f)
     
     arguments = getArguments()
     setSize(arguments)
@@ -62,5 +62,5 @@ def zkArgmax(output_probs, dir_path):
 
     os.chdir(dir_path)
 
-    return proof, content[0]
+    return content[0], proof
 
