@@ -5,12 +5,26 @@ import numpy as np
 import math
 import sys
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+# sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
-from utils.removeNegatives import removeNegatives
-from utils.activated_mat_to_1d import append_subarrays, convert_to_1d, sub_1d
-from utils.maxpooled_mat_to_1d import convert_pooled_mat_to_1d
-from utils.convert_3D_To_1D import convert_3d_to_1d
+# from utils.removeNegatives import removeNegatives
+# from utils.activated_mat_to_1d import append_subarrays, convert_to_1d, sub_1d
+# from utils.maxpooled_mat_to_1d import convert_pooled_mat_to_1d
+# from utils.convert_3D_To_1D import convert_3d_to_1d
+
+
+try:
+    sys.path.append('../utils')
+
+    from convert_3D_To_1D import convert_3d_to_1d
+    from removeNegatives import removeNegatives
+    from activated_mat_to_1d import append_subarrays, convert_to_1d, sub_1d
+    from maxpooled_mat_to_1d import convert_pooled_mat_to_1d
+    from minMaxNormalizationAndInteger import minMaxNorm4
+    from clean import clean_dirs
+
+except Exception as e:
+    print(e)
 
 def maxPool_2d(mat, pool_size):
     res_height = mat.shape[0] // pool_size
@@ -32,15 +46,14 @@ def zkMaxPooling(arguments, dir_path=''):
     data = []
 
     # print(arguments)
-    act_arr = convert_3d_to_1d(arguments)
-    activated = np.array(act_arr)
-    pool = maxPool_2d(activated,2)
+    
+
+    pool = maxPool_2d(arguments,2)
+
     pooled = np.array(pool)
 
-    # print(activated.shape)
-    # print(pooled.shape)
 
-    _, subarrays = append_subarrays(activated,pooled)
+    _, subarrays = append_subarrays(arguments,pooled)
     sub1d = convert_to_1d(subarrays)
     sub_activated = np.array(sub1d)
     mod_activated = sub_1d(sub_activated)
@@ -85,7 +98,10 @@ def zkMaxPooling(arguments, dir_path=''):
 
 
     os.chdir(dir_path)
+    
+    pool = minMaxNorm4(pool)
+    clean_dirs()
 
-    return proof, pool
+    return pool, proof
 
 

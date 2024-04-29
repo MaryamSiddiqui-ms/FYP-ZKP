@@ -24,3 +24,11 @@ def minMaxNormalizationAndIntegerList(lst):
         
     
     return int_list
+
+
+def minMaxNorm4(arr):
+    max_val = arr.max()
+    normalized_arr = (arr) / (max_val)
+    int_arr = np.round(normalized_arr * 10**4)
+    
+    return int_arr.astype(int)

@@ -10,6 +10,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import json
 import re
+import tensorflow as tf
+# import tf.keras.datasets.mnist as mnist
+from typing import List
+
+
+
 
 current_file_path = os.path.abspath(__file__)
 project_path = os.path.dirname(os.path.dirname(current_file_path))
@@ -43,6 +49,7 @@ try:
     from proof_composition import aggregate_proofs
     
     from decision_tree import run_dt 
+    from cnn_main import generateProofCnn
     from prompt import generatePrompt
 
 except Exception as e:
@@ -59,6 +66,10 @@ class DTInputs(BaseModel):
     x3: float
     x4: float
     
+class CNNInputs(BaseModel):
+    input_image: List[List[int]]
+
+
 class PromptInputs(BaseModel):
     inputCode: str
 
@@ -162,6 +173,19 @@ def proofDT(req: DTInputs):
         "prediction": prediction
     }
 
+@app.post("/CNN/prove")
+def proofCNN(req: CNNInputs):
+    clean_dirs()
+    input_image = req.input_image
+    # input_image = json.loads(input_image_str)  # Convert the string back to a 2D array
+    
+    prediction, proof = generateProofCnn(input_image)
+    
+    return {
+        "proof": "proof",
+        "prediction": "prediction"
+    }
+
 # @app.post("/decisiontree/verify")
 # def verifyDT():
 #     verification_status = verify_dt()
@@ -173,7 +197,16 @@ def getPrompt(req: PromptInputs):
         "response": response
     }
 
-    
+
+@app.get("/CNN/mnist")  
+def getData():
+    _, (test_images, test_labels) = tf.keras.datasets.mnist.load_data()
+    digit_images = {}    
+    for image, label in zip(test_images, test_labels):
+        if label not in digit_images:
+            digit_images[label] = image.tolist()    
+    selected_images = list(digit_images.values())    
+    return selected_images
 
 if __name__ == "__main__":
     uvicorn.run(app, host='0.0.0.0', port=80)
