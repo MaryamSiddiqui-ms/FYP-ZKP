@@ -5,6 +5,9 @@ from collections import deque
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
 import sys
+import time
+import os 
+import subprocess
 
 sys.path.append('../../utils')
 
@@ -201,3 +204,18 @@ def run_dt(inputs):
     dt = DecisionTree(my_tree.tree, inputs)
     (proof, prediction)  = dt.main()
     return proof, prediction
+
+def dt_verify():
+    start = time.time()
+    dir_path = os.getcwd()
+    proof_path = "../zkArgmax"
+    result = subprocess.run(["zokrates", "verify", "-j", f"{dir_path}/{proof_path}/proof.json", "-v", f"{dir_path}/{proof_path}/verification.key"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    output_lines = result.stdout.split('\n')
+    
+    verification_status = next((line for line in output_lines if "PASSED" in line),"FAILED")
+    
+    end = time.time()
+    exec_time = end - start
+    print("EXEC TIME: ", exec_time)
+    
+    return  {"verification_status": verification_status, "Time": exec_time}

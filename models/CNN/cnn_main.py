@@ -28,7 +28,7 @@ def generateProofCnn(input_image):
     return model.predicted, model.proof
 
 
-generateProofCnn(np.random.randint(0, 256, size=(28, 28)))
+# generateProofCnn(np.random.randint(0, 256, size=(28, 28)))
     
     
     
