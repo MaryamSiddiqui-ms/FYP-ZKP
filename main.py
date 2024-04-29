@@ -38,6 +38,7 @@ try:
     sys.path.append('../../zkArgmax')
     sys.path.append('../../zkApplyWeights')
     sys.path.append('./models/CNN')
+    sys.path.append('./services')
 
     from minMaxNormalizationAndInteger import minMaxNormalizationAndInteger
     from clean import clean_dirs
@@ -49,6 +50,7 @@ try:
     
     from decision_tree import run_dt 
     from cnn_main import generateProofCnn
+    from prompt import generatePrompt
 
 except Exception as e:
     print(e)
@@ -63,10 +65,13 @@ class DTInputs(BaseModel):
     x2: float
     x3: float
     x4: float
-
+    
 class CNNInputs(BaseModel):
     input_image: List[List[int]]
 
+
+class PromptInputs(BaseModel):
+    inputCode: str
 
 app = FastAPI()
 app.add_middleware(
@@ -184,6 +189,14 @@ def proofCNN(req: CNNInputs):
 # @app.post("/decisiontree/verify")
 # def verifyDT():
 #     verification_status = verify_dt()
+
+@app.post("/prompt-generation")
+def getPrompt(req: PromptInputs):
+    response = generatePrompt(req.inputCode)
+    return {
+        "response": response
+    }
+
 
 @app.get("/CNN/mnist")  
 def getData():
