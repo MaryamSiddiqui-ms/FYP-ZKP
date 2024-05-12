@@ -176,10 +176,11 @@ def proofDT(req: DTInputs):
 @app.post("/CNN/prove")
 def proofCNN(req: CNNInputs):
     clean_dirs()
+    dir_path = os.getcwd()
     input_image = req.input_image
     # input_image = json.loads(input_image_str)  # Convert the string back to a 2D array
     
-    prediction, proof = generateProofCnn(input_image)
+    prediction, proof = generateProofCnn(input_image, dir_path)
     
     return {
         "proof": "proof",

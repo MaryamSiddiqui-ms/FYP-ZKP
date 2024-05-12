@@ -58,7 +58,7 @@ class DecisionTree:
         start_time = time.time()
         dir_path = os.getcwd()
         zkTreeTraversalProof, TreeTraversalWitness = zkTreeTraversal(treeArr, X_test, dir_path)
-        zkArgmaxProof, prediction = zkArgmax(TreeTraversalWitness, dir_path)
+        prediction, zkArgmaxProof = zkArgmax(TreeTraversalWitness, dir_path)
 
         paths = ['../zkTreeTraversal']
         final_proof = aggregate_proofs(paths, dir_path)
@@ -85,7 +85,7 @@ class DecisionTree:
         
         print("\nFINAL CLASS: ", prediction)
         print("\nEXECUTION TIME: ", self.getExecutionTime())
-        return (final_proof, prediction)
+        return final_proof, prediction
 
 
 
