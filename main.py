@@ -126,16 +126,19 @@ def verify(proof_path: str = ''):
     script_path = f"{dir_path}/blockchain"
     node_path = "C:\\Program Files\\nodejs\\node.exe"
     
+    print(script_path)
+    print(dir_path)
+    
     os.chdir(script_path)
     
-    result = subprocess.run(["zokrates", "export-verifier", "-i", f"{dir_path}/{proof_path}/verification.key", "-o", f"{dir_path}/blockchain/contracts/verifier.sol"])
+    newResult = subprocess.run(["zokrates", "export-verifier", "-i", f"{dir_path}/{proof_path}/verification.key", "-o", f"{dir_path}/blockchain/contracts/verifier.sol"])
     
 
     # Construct the command to run, ensuring that newline characters are correctly escaped
-    command = f'"{node_path}" -e "require(\'child_process\').exec(\'npx hardhat run scripts/deploy.js --network localhost\', (error, stdout, stderr) => {{ if (error) {{ console.error(error); return; }} console.log(stdout);}})"'
+    command = f'"{node_path}" -e "require(\'child_process\').exec(\'npx hardhat run scripts/deploy.js --network localhost\', (error, stdout, stderr) => {{ if (error) {{ console.error(error); return; }} console.log(stdout);}})"'    
     result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     
-
+    address = ""
     # Check the result
     if result.returncode == 0:
         # Extract the address from the output
@@ -181,10 +184,11 @@ def proofCNN(req: CNNInputs):
     # input_image = json.loads(input_image_str)  # Convert the string back to a 2D array
     
     prediction, proof = generateProofCnn(input_image, dir_path)
+    print(proof)
     
     return {
-        "proof": "proof",
-        "prediction": "prediction"
+        "proof": proof,
+        "prediction": prediction
     }
 
 # @app.post("/decisiontree/verify")

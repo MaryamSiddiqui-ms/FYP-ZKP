@@ -17,7 +17,7 @@ def getModelParams(file_path):
 def generateProofCnn(input_image, dir_path=''):
     curr_path = dir_path + '/models/CNN'
     os.chdir(curr_path)
-    params_file = 'weights_5.json'
+    params_file = 'weights_8.json'
     weights_dict = getModelParams(params_file)
     
     input_image = np.array(input_image)
